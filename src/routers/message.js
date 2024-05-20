@@ -4,7 +4,7 @@ const router = express.Router();
 // const Message = require('../controllers/message');
 const socketIO = require('socket.io');
 
-const Message = require('../models/messageModel');
+const Message = require('../models/message');
 
 let io;
 
