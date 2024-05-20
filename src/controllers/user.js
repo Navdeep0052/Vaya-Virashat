@@ -2,6 +2,10 @@ const User = require("../models/user");
 const { comparePassword, hashPassword } = require("../utils/password");
 const jwt = require('jsonwebtoken')
 
+// const accountSid = 'AC72d0559abce83ec68e1f701d7d925245';
+// const authToken = '8951aedb65930b3958f5bcd680fd8b0a';
+// const twilio = require('twilio');
+// const client = new twilio(accountSid, authToken);
 
 exports.user = async (req, res) => {
   try {
