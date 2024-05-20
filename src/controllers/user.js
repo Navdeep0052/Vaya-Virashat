@@ -2,6 +2,11 @@ const User = require("../models/user");
 const { comparePassword, hashPassword } = require("../utils/password");
 const jwt = require('jsonwebtoken')
 
+const accountSid = 'AC72d0559abce83ec68e1f701d7d925245';
+const authToken = '8951aedb65930b3958f5bcd680fd8b0a';
+const twilio = require('twilio');
+const client = new twilio(accountSid, authToken);
+
 exports.user = async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
@@ -63,3 +68,37 @@ exports.loginUser = async (req, res) => {
     return res.status(500).send({ error: "Something broke" });
   }
 };
+
+
+// exports.sendMessage = async(req,res)=>{
+//   try{
+//     client.messages.create({
+//       body : req.body.message,
+//       from : 'whatsapp:+14155238886',
+//       to : 'whatsapp: '+req.body.to
+//     }).then(message => console.log("message sent successfully"))
+//     return res.status(200).send({success : true, msg : "message sent successfully"})
+//   }catch(error){
+//     console.log(error);
+//     return res.status(500).send({error : error.message})
+//   }
+// }
+
+exports.sendMessage = async (req, res) => {
+  try {
+    // Ensure 'to' is a string and remove any extra spaces
+    const toNumber = String(req.body.to).trim();
+
+    // Create the message using the correct format
+    client.messages.create({
+      body: req.body.message,
+      from: 'whatsapp:+14155238886',
+      to: 'whatsapp:' + toNumber // Ensure correct formatting
+    }).then(message => console.log("message sent successfully"));
+
+    return res.status(200).send({ success: true, msg: "message sent successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error.message });
+  }
+}
