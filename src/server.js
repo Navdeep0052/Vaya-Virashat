@@ -1,30 +1,30 @@
-const express = require("express")
-const {default : mongoose } = require("mongoose")
-const app = express()
-const fs = require("fs")
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const fs = require("fs");
 
-const port = 8000
+const app = express();
+const port = 8000;
 
- const databse = "mongodb+srv://apisp:YC0KQIOhLAmUBy0l@cluster0.oxrsqmy.mongodb.net/apisp?retryWrites=true&w=majority"
+const database = "mongodb+srv://apisp:YC0KQIOhLAmUBy0l@cluster0.oxrsqmy.mongodb.net/apisp?retryWrites=true&w=majority";
 
+app.use(express.json());
+app.use(cors());
 
-app.use(express.json())
+mongoose.connect(database)
+    .then(() => {
+        console.log("database is connected");
+    })
+    .catch(() => {
+        console.log("error from database");
+    });
 
-mongoose.connect(databse 
-).then(()=>{
-    console.log("databse is connected");
-}).catch(()=>{
-    console.log("error from database");
-})
+// Ensure no token-related middleware is applied globally here
 
+fs.readdirSync("./routers").map((r) => {
+    app.use("/", require(`./routers/${r}`));
+});
 
-
-
-fs.readdirSync("./routers").map((r)=>{
-    app.use("/api",require(`./routers/${r}`))
-})
-
-
-app.listen(port,()=>{
+app.listen(port, () => {
     console.log(`app is running on ${port}`);
-})
+});
