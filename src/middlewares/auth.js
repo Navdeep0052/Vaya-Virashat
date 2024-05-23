@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
 
 exports.createJwtToken = (payload) => {
   const token = jwt.sign(payload, process.env.SECRET, { expiresIn: "30d" });
@@ -13,14 +12,14 @@ exports.verifyJwtToken = async (req, res, next) => {
     const token = authHeader && authHeader.split(" ")[1];
     if (!token) {
       return res
-        .status(200)
-        .json({ status: 403, message: "Token is required !" });
+        .status(400)
+        .json({ message: "Token is required !" });
     }
     jwt.verify(token, process.env.SECRET, (err, data) => {
       if (err) {
         return res
-          .status(200)
-          .json({ status: 401, message: "Token is expired !" });
+          .status(401)
+          .json({message: "Token is expired !" });
       }
       req.user = data;
       next();
@@ -47,7 +46,7 @@ exports.verifyOptionalJwtToken = async (req, res, next) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
           // Token expired
-          return res.status(401).json({ status: 401, message: "Token is expired !" });
+          return res.status(401).json({message: "Token is expired !" });
          } //else {
         //   // Other token verification errors
         //   return res.status(401).json({ status: 401, message: "Token is invalid !" });
@@ -60,7 +59,7 @@ exports.verifyOptionalJwtToken = async (req, res, next) => {
     });
   } catch (e) {
     // Catch and handle unexpected errors
-    return res.status(500).json({ status: 500, message: "Internal Server Error" });
+    return res.status(500).json({message: "Internal Server Error" });
   }
 };
 
