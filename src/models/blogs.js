@@ -1,6 +1,6 @@
 const {default :mongoose, Schema} = require("mongoose")
 
-const todoSchema = new Schema({
+const blogSchema = new Schema({
     title : {
         type : String,
         requitred : true
@@ -17,5 +17,5 @@ const todoSchema = new Schema({
 },
 {timestamps : true})
 
-const ToDo = mongoose.model("todo", todoSchema)
-module.exports = ToDo
+const Blogs = mongoose.model("blog", blogSchema)
+module.exports = Blogs

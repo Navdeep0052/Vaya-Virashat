@@ -1,6 +1,6 @@
-const ToDo = require("../models/todo");
+const Blogs = require("../models/blogs");
 
-exports.createToDo = async (req, res) => {
+exports.createblogs = async (req, res) => {
   try {
     const { title, description, status } = req.body;
 
@@ -14,7 +14,7 @@ exports.createToDo = async (req, res) => {
       description: description,
       status: status,
     };
-    let todo = await ToDo.create(request);
+    let todo = await Blogs.create(request);
     return res.status(200).send({ todo, msg: "Created Sucessfully" });
   } catch (error) {
     console.log(error);
@@ -22,7 +22,7 @@ exports.createToDo = async (req, res) => {
   }
 };
 
-exports.getToDo = async (req, res) => {
+exports.getblogs = async (req, res) => {
   try {
     let page = parseInt(req.query.page);
     let limit = parseInt(req.query.limit);
@@ -31,7 +31,7 @@ exports.getToDo = async (req, res) => {
 
     const result = {};
 
-    if (endIndex < (await ToDo.countDocuments().exec())) {
+    if (endIndex < (await Blogs.countDocuments().exec())) {
       result.next = {
         page: page + 1,
         limit: limit,
@@ -58,14 +58,14 @@ exports.getToDo = async (req, res) => {
       sortOrder = { createdAt: 1 };
     }
 
-    const totalCount = await ToDo.countDocuments().exec();
+    const totalCount = await Blogs.countDocuments().exec();
 
     const pagination =
       page && limit
         ? [page && { $skip: startIndex }, limit && { $limit: parseInt(limit) }]
         : [];
 
-    let data = await ToDo.aggregate([
+    let data = await Blogs.aggregate([
       { $sort: { ...sortOrder } },
       {
         $facet: {
@@ -85,25 +85,25 @@ exports.getToDo = async (req, res) => {
   }
 };
 
-exports.updateToDo = async (req, res) => {
+exports.updateblogs = async (req, res) => {
   try {
-    const todoId = req.params.todoId;
-    const todo = await ToDo.findById(todoId);
-    if (!todo) return res.status(400).send({ error: "Todo not found" });
+    const blogId = req.params.blogId;
+    const blog = await Blogs.findById(blogId);
+    if (!blog) return res.status(400).send({ error: "Blog not found" });
 
     const { title, description, status } = req.body;
 
     if (title) {
-      todo.title = title;
+      blog.title = title;
     }
     if (description) {
-      todo.description = description;
+      blog.description = description;
     }
     if (status) {
-      todo.status = status;
+      blog.status = status;
     }
 
-    await todo.save();
+    await blog.save();
     return res.status(200).send({ todo, msg: "Successfully Updated" });
   } catch (error) {
     console.log(error);
@@ -111,13 +111,13 @@ exports.updateToDo = async (req, res) => {
   }
 };
 
-exports.deleteToDo = async (req, res) => {
+exports.deleteblogs = async (req, res) => {
   try {
-    const todoId = req.params.todoId;
-    const todo = await ToDo.findById(todoId);
-    if (!todo) return res.status(400).send({ error: "Todo not found" });
+    const blogId = req.params.blogId;
+    const blog = await Blogs.findById(blogId);
+    if (!blog) return res.status(400).send({ error: "Blog not found" });
 
-    await ToDo.findByIdAndDelete(todoId);
+    await Blogs.findByIdAndDelete(blogId);
     return res.status(200).send({ msg: "SuccessFully deleted" });
   } catch (error) {
     console.log(error);

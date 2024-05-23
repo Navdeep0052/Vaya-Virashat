@@ -12,7 +12,7 @@ router.setSocketIO = function(socketIOInstance) {
     io = socketIOInstance;
 };
 
-router.get('/', async (req, res) => {
+router.get('/message', async (req, res) => {
     try {
         const messages = await Message.find({});
         res.json(messages);
@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/messge', async (req, res) => {
     const { username, message } = req.body;
     const newMessage = new Message({ username, message });
     try {
