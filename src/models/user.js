@@ -16,7 +16,15 @@ const userSchema = new Schema({
     phone : {
         type : String,
         require : true,
-    }
+    },
+    role : {
+        type : String,
+        enum : ["user", "owner", "admin"],
+        default : "user"
+    },
+    regNumber : {
+        type : String
+    },
 })
 
 const User = mongoose.model("user",userSchema)

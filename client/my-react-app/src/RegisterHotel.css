@@ -1,0 +1,69 @@
+.register-hotel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5%;
+  background-color: #f5f5f5;
+}
+
+.register-hotel-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 90%; /* Adjusted to be responsive */
+  width: 500px; /* Adjusted for larger screens */
+}
+
+.register-hotel-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="password"],
+input[type="url"],
+textarea,
+input[type="number"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding and border don't increase the width */
+}
+
+input[type="file"] {
+  padding: 0.5rem; /* Adjusted for better aesthetics */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: calc(100% - 1rem); /* Adjusted for better alignment */
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

@@ -1,7 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const morgan = require("morgan");
 const fs = require("fs");
+const path = require("path");
+const dotenv = require("dotenv");
+
+// Load environment variables from .env file
+dotenv.config({ path: path.resolve(__dirname, './.env') });
 
 const app = express();
 const port = 8000;
