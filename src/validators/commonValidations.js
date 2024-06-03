@@ -7,7 +7,7 @@ const idNotFoundError = (res, id) => {
 };
 
 const validateFields = (res) => {
-    return res.status(400).send({ error: "This field is required" });
+    return res.status(400).send({ error: " Mendatory Fields are required" });
 };
 const validateFound = (res) => {
     return res.status(400).send({ error: "not found" });

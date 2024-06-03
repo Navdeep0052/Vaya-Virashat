@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 exports.createJwtToken = (payload) => {
-  const token = jwt.sign(payload, process.env.SECRET, { expiresIn: "30d" });
+  const token = jwt.sign(payload, process.env.SECRETKEY, { expiresIn: "30d" });
   return token;
 };
 
@@ -15,7 +15,7 @@ exports.verifyJwtToken = async (req, res, next) => {
         .status(400)
         .json({ message: "Token is required !" });
     }
-    jwt.verify(token, process.env.SECRET, (err, data) => {
+    jwt.verify(token, process.env.SECRETKEY, (err, data) => {
       if (err) {
         return res
           .status(401)
@@ -42,7 +42,7 @@ exports.verifyOptionalJwtToken = async (req, res, next) => {
     const token = authHeader.split(" ")[1];
 
     // Verify token if it exists
-    jwt.verify(token, process.env.SECRET, (err, data) => {
+    jwt.verify(token, process.env.SECRETKEY, (err, data) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
           // Token expired

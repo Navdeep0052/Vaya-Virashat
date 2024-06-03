@@ -1,38 +1,76 @@
+// Login.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import './Signup.css';
+
+const apiurl = import.meta.env.VITE_BASE_API_URL;
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData, [name]: value
+    }));
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const response = await fetch('/login/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password }),
-    });
-    const data = await response.json();
-    console.log(data);
+
+    try {
+      const response = await fetch(apiurl +  '/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Login failed');
+      }
+
+      const data = await response.json();
+
+      if (data.user && data.msg) {
+        toast.success(data.msg); // Display success message
+        navigate('/dashboard'); // Redirect to dashboard after successful login
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      toast.error('An error occurred during login');
+      console.error(error);
+    }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
+    <div className='signup-container'>
+      <form className='signup-form' onSubmit={handleLogin}>
+        <h2>Login</h2>
+        <div className='form-group'>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email"
+            required
+          />
+        </div>
+        <div className='form-group'>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Password"
+            required
+          />
+        </div>
         <button type="submit">Login</button>
       </form>
     </div>

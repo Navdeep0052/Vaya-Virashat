@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const { comparePassword, hashPassword } = require("../utils/password");
-const jwt = require('jsonwebtoken')
+const {createJwtToken} = require("../middlewares/auth")
 const {validateFields, validateFound, validateId} = require('../validators/commonValidations')
 const accountSid = 'AC72d0559abce83ec68e1f701d7d925245';
 const authToken = '8951aedb65930b3958f5bcd680fd8b0a';
@@ -9,14 +9,15 @@ const client = new twilio(accountSid, authToken);
 
 exports.user = async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
-    if(!name || !email || !password || !phone) return validateFields(res);
+    const { name, email, password, phone, role } = req.body;
+    if(!name || !email || !password || !phone  || !role) return validateFields(res);
     const hashedPassword = await hashPassword(password);
     const request = {
       name: name,
       email: email,
       password: hashedPassword,
       phone: phone,
+      role: role,
     };
 
     let user = await User.create(request);
@@ -50,9 +51,13 @@ exports.loginUser = async (req, res) => {
         email: user.email,
         phone : user.phone
       };
+     
+      const token = createJwtToken(payload);
+      if (token) {
+        payload["token"] = token;
+      }
 
-      let token = jwt.sign({ userId: user._id }, "To-Do", { expiresIn: '1d' });
-      return res.status(200).send({payload,token:token, msg : "login successfully"})
+      return res.status(200).send({ user: payload, msg: "Successfully logged in" });
 
   } catch (error) {
     console.log(error);
