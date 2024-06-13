@@ -21,7 +21,7 @@ exports.user = async (req, res) => {
     };
 
     let user = await User.create(request);
-    return res.status(200).send({ user, msg: "Successfully created" });
+    return res.status(200).send({ user, message: "Signup Successfully" });
   } catch (error) {
     console.log("error");
     return res.status(500).send({ error: "Something broke" });
@@ -57,7 +57,7 @@ exports.loginUser = async (req, res) => {
         payload["token"] = token;
       }
 
-      return res.status(200).send({ user: payload, msg: "Successfully logged in" });
+      return res.status(200).send({ user: payload, message: "Successfully logged in" });
 
   } catch (error) {
     console.log(error);

@@ -62,7 +62,6 @@ function Signup({ formData, handleChange, handleSignup }) {
               required
               style={{ width: "2rem" }}
             />
-
             <label>Owner</label>
             <input
               type="radio"

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Signup from './Signup';
 import Login from './Login';
 import './Signin.css';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Home() {
   const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ function Home() {
     phone: '',
     email: '',
     password: '',
-    role : 'user'
+    role: 'user'
   });
   const [isSignup, setIsSignup] = useState(true);
   const [message, setMessage] = useState('');
@@ -33,9 +34,9 @@ function Home() {
       });
       const data = await response.json();
       if (response.ok) {
-        toast.success(data.msg || 'Signup successful!');
-        setMessage(data.msg || 'Signup successful!');
-        setIsSignup(false); // Switch to login form after successful signup
+        toast.success(data.message || 'Signup successful!');
+        //setMessage(data.message || 'Signup successful!');
+        setIsSignup(false);
       } else {
         toast.error(data.error || 'Signup failed. Please try again.');
         setMessage(data.error || 'Signup failed. Please try again.');
@@ -49,7 +50,7 @@ function Home() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(apiurl + '/login/user', {
+      const response = await fetch(apiurl + '/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,22 +58,27 @@ function Home() {
         body: JSON.stringify({ email: formData.email, password: formData.password }),
       });
       const data = await response.json();
+      console.log('Response data:', data);  // Debugging log
+  
       if (response.ok) {
         toast.success(data.message || 'Login successful!');
         setMessage(data.message || 'Login successful!');
-        // Redirect or take appropriate action after successful login
+        // Save the token if needed
+        localStorage.setItem('token', data.user.token);
       } else {
         toast.error(data.message || 'Login failed. Please try again.');
         setMessage(data.message || 'Login failed. Please try again.');
       }
     } catch (error) {
+      console.error('Error:', error);  // Debugging log
       toast.error('An error occurred. Please try again.');
       setMessage('An error occurred. Please try again.');
     }
-  };
+  };   
 
   return (
     <div className="home-container">
+      <ToastContainer />
       <h1 className="title">Welcome to Vaya Virashat</h1>
       {message && <p className="message">{message}</p>}
       {isSignup ? (

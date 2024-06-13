@@ -13,6 +13,9 @@ function Sidebar() {
         <li>
           <Link to="/register-hotel">Register Hotel</Link> {/* Updated path */}
         </li>
+        <li>
+          <Link to="/hotel-list">Hotel List</Link> {/* Add this line */}
+        </li>
       </ul>
     </div>
   );
