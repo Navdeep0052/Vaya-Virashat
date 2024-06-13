@@ -42,3 +42,8 @@
 .signup-form button:hover {
   background-color: #34a853;
 }
+
+.message {
+  color: #d9534f;
+  margin-bottom: 1rem;
+}

@@ -1,8 +1,10 @@
 // Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Signup.css';
+
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
@@ -35,8 +37,8 @@ function Login() {
 
       const data = await response.json();
 
-      if (data.user && data.msg) {
-        toast.success(data.msg); // Display success message
+      if (data.user && data.message) {
+        toast.success(data.message); // Display success message
         navigate('/dashboard'); // Redirect to dashboard after successful login
       } else {
         throw new Error('Invalid response from server');

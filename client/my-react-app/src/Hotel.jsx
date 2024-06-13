@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
-import './RegisterHotel.css';
+import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import './Hotel.css';
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
@@ -29,6 +31,7 @@ function RegisterHotel() {
     ownerPanCard: [],
     ownerPanCardNo: '',
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -88,14 +91,15 @@ function RegisterHotel() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token'), // Assuming you're storing the JWT token in local storage
+          Authorization: 'Bearer ' + localStorage.getItem('token'), 
         },
         body: JSON.stringify(hotelData),
       });
 
       const data = await response.json();
       if (response.ok) {
-        toast.success(data.msg || 'Hotel registration successful!');
+        toast.success(data.message || 'Hotel registration successful!');
+        navigate('/hotel-list');
       } else {
         toast.error(data.error || 'Registration failed. Please try again.');
       }
@@ -106,6 +110,7 @@ function RegisterHotel() {
 
   return (
     <div className="register-hotel-container">
+      <ToastContainer />
       <form className="register-hotel-form" onSubmit={handleSubmit}>
         <h2>Register Hotel</h2>
         <div className="form-group">
@@ -145,7 +150,7 @@ function RegisterHotel() {
             value={hotelData.address}
             onChange={handleChange}
             placeholder="Address"
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -155,7 +160,7 @@ function RegisterHotel() {
             value={hotelData.link}
             onChange={handleChange}
             placeholder="Website Link"
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -163,7 +168,8 @@ function RegisterHotel() {
             type="file"
             name="logo"
             onChange={handleFileChange}
-            required
+            placeholder="Hotel logo"
+            //required
           />
         </div>
         <div className="form-group">
@@ -172,7 +178,7 @@ function RegisterHotel() {
             name="images"
             multiple
             onChange={handleMultiFileChange}
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -181,7 +187,7 @@ function RegisterHotel() {
             name="videos"
             multiple
             onChange={handleMultiFileChange}
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -191,7 +197,7 @@ function RegisterHotel() {
             value={hotelData.map}
             onChange={handleChange}
             placeholder="Map Link"
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -200,7 +206,7 @@ function RegisterHotel() {
             value={hotelData.description}
             onChange={handleChange}
             placeholder="Description"
-            required
+            //required
           ></textarea>
         </div>
         <div className="form-group">
@@ -210,7 +216,7 @@ function RegisterHotel() {
             value={hotelData.confirmRegNumber}
             onChange={handleChange}
             placeholder="Registration Number"
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -220,7 +226,7 @@ function RegisterHotel() {
             value={hotelData.area}
             onChange={handleChange}
             placeholder="Area (sqft)"
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -230,7 +236,7 @@ function RegisterHotel() {
             value={hotelData.hotelStar}
             onChange={handleChange}
             placeholder="Hotel Star Rating"
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -239,7 +245,7 @@ function RegisterHotel() {
             name="propertyPapers"
             multiple
             onChange={handleMultiFileChange}
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -248,7 +254,7 @@ function RegisterHotel() {
             name="agreementPapers"
             multiple
             onChange={handleMultiFileChange}
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -257,7 +263,7 @@ function RegisterHotel() {
             name="electricityBill"
             multiple
             onChange={handleMultiFileChange}
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -288,7 +294,7 @@ function RegisterHotel() {
             name="ownerAdhaarCard"
             multiple
             onChange={handleMultiFileChange}
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -298,7 +304,7 @@ function RegisterHotel() {
             value={hotelData.ownerAdhaarCardNo}
             onChange={handleChange}
             placeholder="Owner Aadhaar Card Number"
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -307,7 +313,7 @@ function RegisterHotel() {
             name="ownerPanCard"
             multiple
             onChange={handleMultiFileChange}
-            required
+            //required
           />
         </div>
         <div className="form-group">
@@ -317,7 +323,7 @@ function RegisterHotel() {
             value={hotelData.ownerPanCardNo}
             onChange={handleChange}
             placeholder="Owner Pan Card Number"
-            required
+            //required
           />
         </div>
         <button type="submit">Register Hotel</button>

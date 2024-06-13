@@ -33,7 +33,7 @@ exports.uploadFiles = async function (req, res) {
       // Set S3 upload parameters
       const params = {
         Bucket: "viaa-bucket",
-        Key: `${originalName}`, // Append a unique identifier to the original file name to avoid collisions
+        Key: `${originalName}`, 
         Body: binaryData,
         ContentType: mimeType,
       };
@@ -77,31 +77,31 @@ exports.registerHotel = async (req, res) => {
       ownerPanCardNo,
       status,
     } = req.body;
-    if (
-      !hotelName ||
-      !hotelEmail ||
-      !contactDetails ||
-      !address ||
-      !link ||
-      !logo ||
-      !images ||
-      !videos ||
-      !map ||
-      !description ||
-      !confirmRegNumber ||
-      !area ||
-      !hotelStar ||
-      !propertyPapers ||
-      !aggrementPapers ||
-      !electricityBill ||
-      !cameras ||
-      !wifi ||
-      !ownerAdhaarCard ||
-      !ownerAdhaarCardNo ||
-      !ownerPanCard ||
-      !ownerPanCardNo
-    )
-      return validateFields(res);
+    // if (
+    //   !hotelName ||
+    //   !hotelEmail ||
+    //   !contactDetails ||
+    //   !address ||
+    //   !link ||
+    //   !logo ||
+    //   !images ||
+    //   !videos ||
+    //   !map ||
+    //   !description ||
+    //   !confirmRegNumber ||
+    //   !area ||
+    //   !hotelStar ||
+    //   !propertyPapers ||
+    //   !aggrementPapers ||
+    //   !electricityBill ||
+    //   !cameras ||
+    //   !wifi ||
+    //   !ownerAdhaarCard ||
+    //   !ownerAdhaarCardNo ||
+    //   !ownerPanCard ||
+    //   !ownerPanCardNo
+    // )
+    //   return validateFields(res);
     const request = {
       ownerId: userId,
       hotelName: hotelName,
@@ -129,9 +129,46 @@ exports.registerHotel = async (req, res) => {
       status: status,
     };
     let hotel = await Hotel.create(request);    
-    return res.status(200).send({ hotel, msg: "Successfully created" });
+    return res.status(200).send({ hotel, message: "Hotel registration successful!" });
   } catch (error) {
     console.log("error");
     return res.status(500).send({ error: "Something broke" });
   }
 };  
+
+exports.getRegisterHotel = async (req, res) => {
+  try {
+    const userId = req.user._id
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const hotel = await Hotel.find({ ownerId: userId }).skip((page - 1) * limit).limit(limit);
+    return res.status(200).send({ hotel : hotel, message : "List Fetched Successfully"  });
+  } catch (error) {
+    console.log("error");
+    return res.status(500).send({ error: "Something broke" });
+  }
+};
+
+exports.getHotelDetails = async (req, res) => {
+  try {
+    const hotelId = req.params.hotelId
+    const hotel = await Hotel.findById(hotelId);
+    return res.status(200).send({ hotel : hotel, message : "List Fetched Successfully"  });
+  } catch (error) {
+    console.log("error");
+    return res.status(500).send({ error: "Something broke" });
+  }
+};
+
+exports.deleteHotel = async (req, res) => {
+  try {
+    const hotelId = req.params.hotelId
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) return validateFound(res)
+    await Hotel.findByIdAndDelete(hotelId);
+    return res.status(200).send({ msg: "SuccessFully deleted" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "Something broke" });
+  }
+}

@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Signin';
-import RegisterHotel from './RegisterHotel'; // Assuming this is the component for registering a hotel
+import RegisterHotel from './Hotel'; // Assuming this is the component for registering a hotel
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
