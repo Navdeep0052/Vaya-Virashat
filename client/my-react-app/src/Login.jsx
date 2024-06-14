@@ -39,6 +39,7 @@ function Login() {
 
       if (data.user && data.message) {
         toast.success(data.message); // Display success message
+        localStorage.setItem('token', data.user.token);
         navigate('/dashboard'); // Redirect to dashboard after successful login
       } else {
         throw new Error('Invalid response from server');

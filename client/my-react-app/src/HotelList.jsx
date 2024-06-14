@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Card, Spinner, Button } from "react-bootstrap";
 import Sidebar from "./Sidebar"; // Import your Sidebar component
 import "./HotelList.css";
 
@@ -30,13 +30,38 @@ function HotelList() {
         setLoading(false);
       } catch (error) {
         console.error("Fetch error:", error);
-        toast.error("An error occurred while fetching hotels. Please try again.");
+        toast.error(
+          "An error occurred while fetching hotels. Please try again."
+        );
         setLoading(false);
       }
     };
 
     fetchHotels();
   }, []);
+
+  const handleDelete = async (hotelId) => {
+    try {
+      const response = await fetch(`${apiurl}/deleteHotel/${hotelId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+
+      if (response.ok) {
+        setHotels((prevHotels) =>
+          prevHotels.filter((hotel) => hotel._id !== hotelId)
+        );
+        toast.success("Hotel deleted successfully!");
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "Deletion failed. Please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+    }
+  };
 
   if (loading) {
     return (
@@ -66,17 +91,22 @@ function HotelList() {
                           variant="top"
                           src={hotel.logo}
                           alt={hotel.hotelName}
-                          className="hotel-logo"
+                          className="hotel-logo "
+                          style={{ width: "25rem" }}
                         />
                       </Col>
-                      <Col xs={12} md={8}>
+                      <Col xs={12} md={8} className="ps-5">
                         <Card.Body>
                           <Card.Title>{hotel.hotelName}</Card.Title>
-                          <Card.Text>Hotel Email: {hotel.hotelEmail}</Card.Text>
-                          <Card.Text>Contact Details: {hotel.contactDetails}</Card.Text>
-                          <Card.Text>Address: {hotel.address}</Card.Text>
                           <Card.Text>
-                            Hotel Website:{" "}
+                            <strong>Hotel Email :</strong> {hotel.hotelEmail}
+                          </Card.Text>
+                          <Card.Text>
+                            <strong>Contact Details :</strong> {hotel.contactDetails}
+                          </Card.Text>
+                          <Card.Text><strong>Address :</strong> {hotel.address}</Card.Text>
+                          <Card.Text><strong>
+                            Hotel Website :</strong> {" "}
                             <a
                               href={hotel.link}
                               target="_blank"
@@ -85,9 +115,20 @@ function HotelList() {
                               {hotel.link}
                             </a>
                           </Card.Text>
-                          <Card.Text>Description: {hotel.description}</Card.Text>
-                          <Card.Text>Rating: {hotel.hotelStar}</Card.Text>
                         </Card.Body>
+                      </Col>
+                      <Col xs={12} md={12}>
+                        <Card.Text className="text-start">
+                          <strong>Description :</strong> {hotel.description}
+                        </Card.Text>
+                        <Card.Text><strong>Rating :</strong> {hotel.hotelStar}</Card.Text>
+                        <Button
+                          variant="danger"
+                          onClick={() => handleDelete(hotel._id)}
+                          className="delete-button px-5"
+                        >
+                          Delete
+                        </Button>
                       </Col>
                     </Row>
                   </Card>

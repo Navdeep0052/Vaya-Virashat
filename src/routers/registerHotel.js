@@ -10,7 +10,8 @@ router.post("/register", verifyJwtToken, ctrl.registerHotel)
 router.post("/upload", upload.array('files'), ctrl.uploadFiles)
 router.get("/listing", verifyJwtToken, ctrl.getRegisterHotel)
 router.get("/listing/:hotelId", verifyJwtToken, ctrl.getHotelDetails)
-router.delete("/delete/:hotelId", verifyJwtToken, ctrl.deleteHotel)
+router.delete("/deleteHotel/:hotelId", verifyJwtToken, ctrl.deleteHotel)
+router.put("/editHotel/:hotelId", verifyJwtToken, ctrl.editHotel)
 
 
 module.exports = router
