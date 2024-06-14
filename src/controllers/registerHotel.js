@@ -129,7 +129,7 @@ exports.registerHotel = async (req, res) => {
       status: status,
     };
     let hotel = await Hotel.create(request);    
-    return res.status(200).send({ hotel, message: "Hotel registration successful!" });
+    return res.status(201).send({ hotel, message: "Hotel registration successful!" });
   } catch (error) {
     console.log("error");
     return res.status(500).send({ error: "Something broke" });
@@ -156,6 +156,110 @@ exports.getHotelDetails = async (req, res) => {
     return res.status(200).send({ hotel : hotel, message : "List Fetched Successfully"  });
   } catch (error) {
     console.log("error");
+    return res.status(500).send({ error: "Something broke" });
+  }
+};
+
+exports.editHotel = async (req, res) => {
+  try {
+    const hotelId = req.params.hotelId
+    const {
+      hotelName,
+      hotelEmail,
+      contactDetails,
+      address,  
+      link,
+      logo,
+      images,
+      videos,
+      map,
+      description,
+      confirmRegNumber,
+      area,
+      hotelStar,
+      propertyPapers,
+      aggrementPapers,
+      electricityBill,
+      cameras,  
+      wifi,     
+      ownerAdhaarCard,
+      ownerAdhaarCardNo,
+      ownerPanCard,
+      ownerPanCardNo,
+    } = req.body;
+    
+    const hotel = await Hotel.findById(hotelId);
+    if(!hotel) return validateFound(res)
+    if(hotelName){
+      hotel.hotelName = hotelName
+    }
+    if(hotelEmail){
+      hotel.hotelEmail = hotelEmail
+    }
+    if(contactDetails){
+      hotel.contactDetails = contactDetails
+    }
+    if(address){
+      hotel.address = address
+    }
+    if(link){
+      hotel.link = link
+    }
+    if(logo){
+      hotel.logo = logo
+    }
+    if(images){
+      hotel.images = images
+    }
+    if(videos){
+      hotel.videos = videos
+    }
+    if(map){
+      hotel.map = map
+    }
+    if(description){
+      hotel.description = description
+    }
+    if(confirmRegNumber){
+      hotel.confirmRegNumber = confirmRegNumber
+    }
+    if(area){
+      hotel.area = area
+    }
+    if(hotelStar){
+      hotel.hotelStar = hotelStar
+    }
+    if(propertyPapers){
+      hotel.propertyPapers = propertyPapers
+    }
+    if(aggrementPapers){
+      hotel.aggrementPapers = aggrementPapers
+    }
+    if(electricityBill){
+      hotel.electricityBill = electricityBill
+    }
+    if(cameras){
+      hotel.cameras = cameras
+    }
+    if(wifi){
+      hotel.wifi = wifi
+    }
+    if(ownerAdhaarCard){
+      hotel.ownerAdhaarCard = ownerAdhaarCard
+    }
+    if(ownerAdhaarCardNo){
+      hotel.ownerAdhaarCardNo = ownerAdhaarCardNo
+    }
+    if(ownerPanCard){
+      hotel.ownerPanCard = ownerPanCard
+    }
+    if(ownerPanCardNo){
+      hotel.ownerPanCardNo = ownerPanCardNo 
+    }
+    await hotel.save()
+    return res.status(200).send({ hotel : hotel, message : "Hotel Details Updated Successfully"  });
+  } catch (error) {
+    console.log("error"); 
     return res.status(500).send({ error: "Something broke" });
   }
 };
