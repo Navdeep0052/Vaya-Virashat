@@ -22,6 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/register-hotel" element={<RegisterHotel />} /> {/* Add this line */}
         <Route path="/hotel-list" element={<HotelList />} /> {/* Add this line */}
         <Route path="/edit-hotel/:hotelId" element={<RegisterHotel />} />
+        <Route path="/hotel-detail/:hotelId" element={<RegisterHotel />} />
         <Route path="/app" element={<App />} />
       </Routes>
     </Router>

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Container, Row, Col, Card, Spinner, Button } from "react-bootstrap";
 import { FaEdit } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Make sure to import useNavigate
-import Sidebar from "./Sidebar"; // Import your Sidebar component
+import { useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar"; 
 import "./HotelList.css";
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
@@ -11,7 +11,7 @@ const apiurl = import.meta.env.VITE_BASE_API_URL;
 function HotelList() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -70,6 +70,10 @@ function HotelList() {
     navigate(`/edit-hotel/${hotelId}`);
   };
 
+  const handleViewDetails = (hotelId) => {
+    navigate(`/hotel-detail/${hotelId}`);
+  };
+
   if (loading) {
     return (
       <div className="loading-spinner">
@@ -84,7 +88,7 @@ function HotelList() {
     <Container fluid className="hotel-list-container">
       <Row>
         <Col md={3}>
-          <Sidebar /> {/* Include your Sidebar component */}
+          <Sidebar />
         </Col>
         <Col md={9}>
           {hotels.length > 0 ? (
@@ -99,7 +103,9 @@ function HotelList() {
                       className="hotel-logo"
                     />
                     <Card.Body>
-                      <Card.Title className="card-title">{hotel.hotelName}</Card.Title>
+                      <Card.Title className="card-title" onClick={() => handleViewDetails(hotel._id)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                        {hotel.hotelName}
+                      </Card.Title>
                       <Card.Text>
                         <strong>Hotel Email :</strong> {hotel.hotelEmail}
                       </Card.Text>
