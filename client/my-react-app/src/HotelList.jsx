@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Container, Row, Col, Card, Spinner, Button } from "react-bootstrap";
-import Sidebar from "./Sidebar"; // Import your Sidebar component
+import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar"; 
 import "./HotelList.css";
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
@@ -9,6 +11,7 @@ const apiurl = import.meta.env.VITE_BASE_API_URL;
 function HotelList() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -63,6 +66,14 @@ function HotelList() {
     }
   };
 
+  const handleEdit = (hotelId) => {
+    navigate(`/edit-hotel/${hotelId}`);
+  };
+
+  const handleViewDetails = (hotelId) => {
+    navigate(`/hotel-detail/${hotelId}`);
+  };
+
   if (loading) {
     return (
       <div className="loading-spinner">
@@ -77,7 +88,7 @@ function HotelList() {
     <Container fluid className="hotel-list-container">
       <Row>
         <Col md={3}>
-          <Sidebar /> {/* Include your Sidebar component */}
+          <Sidebar />
         </Col>
         <Col md={9}>
           {hotels.length > 0 ? (
@@ -85,52 +96,54 @@ function HotelList() {
               {hotels.map((hotel) => (
                 <Col xs={12} key={hotel._id} className="mb-4">
                   <Card className="hotel-card">
-                    <Row className="align-items-center">
-                      <Col xs={12} md={4}>
-                        <Card.Img
-                          variant="top"
-                          src={hotel.logo}
-                          alt={hotel.hotelName}
-                          className="hotel-logo "
-                          style={{ width: "25rem" }}
-                        />
-                      </Col>
-                      <Col xs={12} md={8} className="ps-5">
-                        <Card.Body>
-                          <Card.Title>{hotel.hotelName}</Card.Title>
-                          <Card.Text>
-                            <strong>Hotel Email :</strong> {hotel.hotelEmail}
-                          </Card.Text>
-                          <Card.Text>
-                            <strong>Contact Details :</strong> {hotel.contactDetails}
-                          </Card.Text>
-                          <Card.Text><strong>Address :</strong> {hotel.address}</Card.Text>
-                          <Card.Text><strong>
-                            Hotel Website :</strong> {" "}
-                            <a
-                              href={hotel.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {hotel.link}
-                            </a>
-                          </Card.Text>
-                        </Card.Body>
-                      </Col>
-                      <Col xs={12} md={12}>
-                        <Card.Text className="text-start">
-                          <strong>Description :</strong> {hotel.description}
-                        </Card.Text>
-                        <Card.Text><strong>Rating :</strong> {hotel.hotelStar}</Card.Text>
+                    <Card.Img
+                      variant="top"
+                      src={hotel.logo}
+                      alt={hotel.hotelName}
+                      className="hotel-logo"
+                    />
+                    <Card.Body>
+                      <Card.Title className="card-title" onClick={() => handleViewDetails(hotel._id)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                        {hotel.hotelName}
+                      </Card.Title>
+                      <Card.Text>
+                        <strong>Hotel Email :</strong> {hotel.hotelEmail}
+                      </Card.Text>
+                      <Card.Text>
+                        <strong>Contact Details :</strong> {hotel.contactDetails}
+                      </Card.Text>
+                      <Card.Text><strong>Address :</strong> {hotel.address}</Card.Text>
+                      <Card.Text><strong>Hotel Website :</strong>{" "}
+                        <a
+                          href={hotel.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="card-link"
+                        >
+                          {hotel.link}
+                        </a>
+                      </Card.Text>
+                      <Card.Text className="card-description">
+                        <strong>Description :</strong> {hotel.description}
+                      </Card.Text>
+                      <Card.Text><strong>Rating :</strong> {hotel.hotelStar}</Card.Text>
+                      <div className="d-flex justify-content-end">
+                        <Button
+                          variant="outline-primary"
+                          onClick={() => handleEdit(hotel._id)}
+                          className="edit-button me-2"
+                        >
+                          <FaEdit /> Edit
+                        </Button>
                         <Button
                           variant="danger"
                           onClick={() => handleDelete(hotel._id)}
-                          className="delete-button px-5"
+                          className="delete-button"
                         >
                           Delete
                         </Button>
-                      </Col>
-                    </Row>
+                      </div>
+                    </Card.Body>
                   </Card>
                 </Col>
               ))}
