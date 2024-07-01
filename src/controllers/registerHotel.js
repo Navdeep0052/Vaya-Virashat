@@ -76,6 +76,11 @@ exports.registerHotel = async (req, res) => {
       ownerPanCard,
       ownerPanCardNo,
       status,
+      daysAvailiblity,
+      alldaysAvailable,
+      from,
+      to,
+      slots,
     } = req.body;
     // if (
     //   !hotelName ||
@@ -102,6 +107,32 @@ exports.registerHotel = async (req, res) => {
     //   !ownerPanCardNo
     // )
     //   return validateFields(res);
+
+    // Function to generate slots from 12:00:00 to 24:00:00 and mark the available ones between from and to times
+   const generateSlots = (from, to) => {
+    const startTime = moment("08:00:00", "HH:mm:ss");
+    const endTime = moment("22:00:00", "HH:mm:ss");
+    const interval = 30; // 30 minutes interval
+    const slots = [];
+    const userFrom = moment(from, "HH:mm:ss");
+    const userTo = moment(to, "HH:mm:ss");
+
+    while (startTime.isBefore(endTime)) {
+      const slotTime = startTime.format("HH:mm:ss");
+      const isAvailable = startTime.isSameOrAfter(userFrom) && startTime.isBefore(userTo);
+      slots.push({ slot: slotTime, available: isAvailable });
+      startTime.add(interval, "minutes");
+    }
+
+    return slots;
+  };
+
+  if (from && to) {
+    // Generate slots if from and to times are provided
+    slots = generateSlots(from, to);
+  }
+
+
     const request = {
       ownerId: userId,
       hotelName: hotelName,
@@ -127,6 +158,11 @@ exports.registerHotel = async (req, res) => {
       ownerPanCard: ownerPanCard,
       ownerPanCardNo: ownerPanCardNo,
       status: status,
+      daysAvailiblity,
+      alldaysAvailable,
+      from,
+      to,
+      slots : slots,
     };
     let hotel = await Hotel.create(request);    
     return res.status(201).send({ hotel, message: "Hotel registration successful!" });
