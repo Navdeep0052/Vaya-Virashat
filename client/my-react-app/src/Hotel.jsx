@@ -424,7 +424,13 @@ function RegisterHotel() {
     electricityBill: [],
     cameras: false,
     ownerAdhaarCardNo: '',
+    ownerAdhaarCard: [],
     ownerPanCardNo: '',
+    ownerPanCard: [],
+    daysAvailiblity: 'Weekdays', // default value
+    alldaysAvailable: false, // default value
+    from: '',
+    to: '',
   });
 
   useEffect(() => {
@@ -470,6 +476,10 @@ function RegisterHotel() {
         ownerAdhaarCard: hotel.ownerAdhaarCard || [],
         ownerPanCardNo: hotel.ownerPanCardNo || '',
         ownerPanCard: hotel.ownerPanCard || [],
+        daysAvailiblity: hotel.daysAvailiblity || 'Weekdays',
+        alldaysAvailable: hotel.alldaysAvailable || false,
+        from: hotel.from || '',
+        to: hotel.to || '',
       });
     } catch (error) {
       console.error('Error fetching hotel data:', error);
@@ -541,11 +551,15 @@ function RegisterHotel() {
 
       const data = await response.json();
       if (response.ok) {
-        const message = isEditMode ? 'Hotel updated successfully!' : (data.message || 'Hotel registered successfully!');
+        const message = isEditMode
+          ? 'Hotel updated successfully!'
+          : data.message || 'Hotel registered successfully!';
         toast.success(message);
         navigate('/hotel-list');
       } else {
-        const errorMessage = isEditMode ? 'Hotel update failed. Please try again.' : (data.error || 'Registration failed. Please try again.');
+        const errorMessage = isEditMode
+          ? 'Hotel update failed. Please try again.'
+          : data.error || 'Registration failed. Please try again.';
         toast.error(errorMessage);
       }
     } catch (error) {
@@ -615,15 +629,15 @@ function RegisterHotel() {
             onChange={handleFileChange}
             placeholder="Upload Hotel Logo"
           />
+          {hotelData.logo && (
+            <div className="preview-logo">
+              <img src={hotelData.logo} alt="Hotel Logo" />
+            </div>
+          )}
         </div>
         <div className="form-group">
           <label>Hotel Images</label>
-          <input
-            type="file"
-            name="images"
-            multiple
-            onChange={handleFileChange}
-          />
+          <input type="file" name="images" multiple onChange={handleFileChange} />
           {hotelData.images && hotelData.images.length > 0 && (
             <div className="preview-images">
               {hotelData.images.map((image, index) => (
@@ -634,12 +648,7 @@ function RegisterHotel() {
         </div>
         <div className="form-group">
           <label>Hotel Videos</label>
-          <input
-            type="file"
-            name="videos"
-            multiple
-            onChange={handleFileChange}
-          />
+          <input type="file" name="videos" multiple onChange={handleFileChange} />
           {hotelData.videos && hotelData.videos.length > 0 && (
             <div className="preview-videos">
               {hotelData.videos.map((video, index) => (
@@ -697,12 +706,7 @@ function RegisterHotel() {
         </div>
         <div className="form-group">
           <label>Hotel Papers</label>
-          <input
-            type="file"
-            name="propertyPapers"
-            multiple
-            onChange={handleFileChange}
-          />
+          <input type="file" name="propertyPapers" multiple onChange={handleFileChange} />
           {hotelData.propertyPapers && hotelData.propertyPapers.length > 0 && (
             <div className="preview-papers">
               {hotelData.propertyPapers.map((paper, index) => (
@@ -713,12 +717,7 @@ function RegisterHotel() {
         </div>
         <div className="form-group">
           <label>Hotel Agreement Papers</label>
-          <input
-            type="file"
-            name="agreementPapers"
-            multiple
-            onChange={handleFileChange}
-          />
+          <input type="file" name="agreementPapers" multiple onChange={handleFileChange} />
           {hotelData.agreementPapers && hotelData.agreementPapers.length > 0 && (
             <div className="preview-agreement-papers">
               {hotelData.agreementPapers.map((paper, index) => (
@@ -729,12 +728,7 @@ function RegisterHotel() {
         </div>
         <div className="form-group">
           <label>Electricity Bill</label>
-          <input
-            type="file"
-            name="electricityBill"
-            multiple
-            onChange={handleFileChange}
-          />
+          <input type="file" name="electricityBill" multiple onChange={handleFileChange} />
           {hotelData.electricityBill && hotelData.electricityBill.length > 0 && (
             <div className="preview-electricity-bill">
               {hotelData.electricityBill.map((bill, index) => (
@@ -771,12 +765,73 @@ function RegisterHotel() {
           />
         </div>
         <div className="form-group">
+          <label>Owner Pan Card Images</label>
+          <input type="file" name="ownerPanCard" multiple onChange={handleFileChange} />
+          {hotelData.ownerPanCard && hotelData.ownerPanCard.length > 0 && (
+            <div className="preview-pan-card">
+              {hotelData.ownerPanCard.map((pan, index) => (
+                <img key={index} src={pan} alt={`Pan Card ${index + 1}`} />
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="form-group">
           <input
             type="text"
             name="ownerAdhaarCardNo"
             value={hotelData.ownerAdhaarCardNo}
             onChange={handleChange}
             placeholder="Owner Aadhaar Card Number"
+          />
+        </div>
+        <div className="form-group">
+          <label>Owner Adhar Card Images</label>
+          <input type="file" name="ownerAdhaarCard" multiple onChange={handleFileChange} />
+          {hotelData.ownerAdhaarCard && hotelData.ownerAdhaarCard.length > 0 && (
+            <div className="preview-adhar-card">
+              {hotelData.ownerAdhaarCard.map((adhar, index) => (
+                <img key={index} src={adhar} alt={`Adhar Card ${index + 1}`} />
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="form-group">
+          <label>Days Availability</label>
+          <select
+            name="daysAvailiblity"
+            value={hotelData.daysAvailiblity}
+            onChange={handleChange}
+          >
+            <option value="Everyday">Everyday</option>
+            <option value="Weekdays">Weekdays</option>
+            <option value="Weekends">Weekends</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <input
+            type="checkbox"
+            name="alldaysAvailable"
+            checked={hotelData.alldaysAvailable}
+            onChange={handleChange}
+          />
+          <label>All Days Available</label>
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="from"
+            value={hotelData.from}
+            onChange={handleChange}
+            placeholder="From"
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="to"
+            value={hotelData.to}
+            onChange={handleChange}
+            placeholder="To"
           />
         </div>
         <button type="submit">{isEditMode ? 'Update Hotel' : 'Register Hotel'}</button>
@@ -786,4 +841,3 @@ function RegisterHotel() {
 }
 
 export default RegisterHotel;
-

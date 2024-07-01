@@ -82,6 +82,26 @@ const registerHotelSchema = new Schema({
     enum : ["approved", "pending", "rejected"],
     default : "pending"
   },
+  daysAvailiblity : {
+    type : String,
+    enum : ["Everyday", "Weekdays", "Weekends"],
+    default : "Weekdays"
+  },
+  alldaysAvailable : {
+    type : Boolean,
+    default : false
+  },
+  from: String,
+  to: String,
+  slots: [
+    {
+      slot: String, 
+      available: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
   status: {
     type: Boolean,
     default: false,
