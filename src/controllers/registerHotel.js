@@ -32,7 +32,7 @@ exports.uploadFiles = async function (req, res) {
 
       // Set S3 upload parameters
       const params = {
-        Bucket: "viaa-bucket",
+        Bucket: "flb-public",
         Key: `${originalName}`, 
         Body: binaryData,
         ContentType: mimeType,
