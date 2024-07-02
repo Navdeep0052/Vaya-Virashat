@@ -1,4 +1,5 @@
 const Hotel = require("../models/registerHotel");
+const moment = require("moment");
 const {
   validateFields,
   validateFound,
@@ -51,12 +52,69 @@ exports.uploadFiles = async function (req, res) {
 
 exports.registerHotel = async (req, res) => {
   try {
-    const userId = req.user._id
+    const userId = req.user._id;
     const {
       hotelName,
       hotelEmail,
       contactDetails,
-      address,  
+      address,
+      link,
+      logo,
+      images,
+      videos,
+      map,
+      description,
+      confirmRegNumber,
+      area,
+      hotelStar,
+      propertyPapers,
+      aggrementPapers,
+      electricityBill,
+      cameras,
+      wifi,
+      ownerAdhaarCard,
+      ownerAdhaarCardNo,
+      ownerPanCard,
+      ownerPanCardNo,
+      status,
+      daysAvailiblity,
+      alldaysAvailable,
+      from,
+      to,
+    } = req.body;
+
+    // Function to generate slots
+    const generateSlots = (from, to) => {
+      const startTime = moment("08:00:00", "HH:mm:ss");
+      const endTime = moment("22:00:00", "HH:mm:ss");
+      const interval = 30; // 30 minutes interval
+      const slots = [];
+
+      const userFrom = moment(from, "HH:mm:ss");
+      const userTo = moment(to, "HH:mm:ss");
+
+      while (startTime.isBefore(endTime)) {
+        const slotTime = startTime.format("HH:mm:ss");
+        const isAvailable = startTime.isSameOrAfter(userFrom) && startTime.isBefore(userTo);
+        slots.push({ slot: slotTime, available: isAvailable });
+        startTime.add(interval, "minutes");
+      }
+
+      return slots;
+    };
+
+    let slots = [];
+    if (from && to) {
+      // Generate slots if from and to times are provided
+      slots = generateSlots(from, to);
+    }
+
+    const request = {
+      ownerId: userId,
+      hotelName,
+      hotelEmail,
+      contactDetails,
+      address,
       link,
       logo,
       images,
@@ -81,96 +139,15 @@ exports.registerHotel = async (req, res) => {
       from,
       to,
       slots,
-    } = req.body;
-    // if (
-    //   !hotelName ||
-    //   !hotelEmail ||
-    //   !contactDetails ||
-    //   !address ||
-    //   !link ||
-    //   !logo ||
-    //   !images ||
-    //   !videos ||
-    //   !map ||
-    //   !description ||
-    //   !confirmRegNumber ||
-    //   !area ||
-    //   !hotelStar ||
-    //   !propertyPapers ||
-    //   !aggrementPapers ||
-    //   !electricityBill ||
-    //   !cameras ||
-    //   !wifi ||
-    //   !ownerAdhaarCard ||
-    //   !ownerAdhaarCardNo ||
-    //   !ownerPanCard ||
-    //   !ownerPanCardNo
-    // )
-    //   return validateFields(res);
-
-    // Function to generate slots from 12:00:00 to 24:00:00 and mark the available ones between from and to times
-   const generateSlots = (from, to) => {
-    const startTime = moment("08:00:00", "HH:mm:ss");
-    const endTime = moment("22:00:00", "HH:mm:ss");
-    const interval = 30; // 30 minutes interval
-    const slots = [];
-    const userFrom = moment(from, "HH:mm:ss");
-    const userTo = moment(to, "HH:mm:ss");
-
-    while (startTime.isBefore(endTime)) {
-      const slotTime = startTime.format("HH:mm:ss");
-      const isAvailable = startTime.isSameOrAfter(userFrom) && startTime.isBefore(userTo);
-      slots.push({ slot: slotTime, available: isAvailable });
-      startTime.add(interval, "minutes");
-    }
-
-    return slots;
-  };
-
-  if (from && to) {
-    // Generate slots if from and to times are provided
-    slots = generateSlots(from, to);
-  }
-
-
-    const request = {
-      ownerId: userId,
-      hotelName: hotelName,
-      hotelEmail: hotelEmail,    
-      contactDetails: contactDetails,   
-      address: address,   
-      link: link,   
-      logo: logo,   
-      images: images,   
-      videos: videos,   
-      map: map,   
-      description: description,   
-      confirmRegNumber: confirmRegNumber,   
-      area: area,   
-      hotelStar: hotelStar,     
-      propertyPapers: propertyPapers,   
-      aggrementPapers: aggrementPapers,   
-      electricityBill: electricityBill,   
-      cameras: cameras,   
-      wifi: wifi,
-      ownerAdhaarCard: ownerAdhaarCard,
-      ownerAdhaarCardNo: ownerAdhaarCardNo,
-      ownerPanCard: ownerPanCard,
-      ownerPanCardNo: ownerPanCardNo,
-      status: status,
-      daysAvailiblity,
-      alldaysAvailable,
-      from,
-      to,
-      slots : slots,
     };
-    let hotel = await Hotel.create(request);    
+
+    let hotel = await Hotel.create(request);
     return res.status(201).send({ hotel, message: "Hotel registration successful!" });
   } catch (error) {
-    console.log("error");
+    console.log(error);
     return res.status(500).send({ error: "Something broke" });
   }
-};  
+};
 
 exports.getRegisterHotel = async (req, res) => {
   try {
@@ -198,7 +175,7 @@ exports.getHotelDetails = async (req, res) => {
 
 exports.editHotel = async (req, res) => {
   try {
-    const hotelId = req.params.hotelId
+    const hotelId = req.params.hotelId;
     const {
       hotelName,
       hotelEmail,
@@ -222,83 +199,73 @@ exports.editHotel = async (req, res) => {
       ownerAdhaarCardNo,
       ownerPanCard,
       ownerPanCardNo,
+      alldaysAvailable,
+      daysAvailiblity,
+      from,
+      to
     } = req.body;
-    
+
     const hotel = await Hotel.findById(hotelId);
-    if(!hotel) return validateFound(res)
-    if(hotelName){
-      hotel.hotelName = hotelName
+    if (!hotel) return res.status(404).send({ error: "Hotel not found" });
+
+    if (hotelName) hotel.hotelName = hotelName;
+    if (hotelEmail) hotel.hotelEmail = hotelEmail;
+    if (contactDetails) hotel.contactDetails = contactDetails;
+    if (address) hotel.address = address;
+    if (link) hotel.link = link;
+    if (logo) hotel.logo = logo;
+    if (images) hotel.images = images;
+    if (videos) hotel.videos = videos;
+    if (map) hotel.map = map;
+    if (description) hotel.description = description;
+    if (confirmRegNumber) hotel.confirmRegNumber = confirmRegNumber;
+    if (area) hotel.area = area;
+    if (hotelStar) hotel.hotelStar = hotelStar;
+    if (propertyPapers) hotel.propertyPapers = propertyPapers;
+    if (aggrementPapers) hotel.aggrementPapers = aggrementPapers;
+    if (electricityBill) hotel.electricityBill = electricityBill;
+    if (cameras) hotel.cameras = cameras;
+    if (wifi) hotel.wifi = wifi;
+    if (ownerAdhaarCard) hotel.ownerAdhaarCard = ownerAdhaarCard;
+    if (ownerAdhaarCardNo) hotel.ownerAdhaarCardNo = ownerAdhaarCardNo;
+    if (ownerPanCard) hotel.ownerPanCard = ownerPanCard;
+    if (ownerPanCardNo) hotel.ownerPanCardNo = ownerPanCardNo;
+    if (alldaysAvailable !== undefined) hotel.alldaysAvailable = alldaysAvailable;
+    if (daysAvailiblity) hotel.daysAvailiblity = daysAvailiblity;
+
+    const generateSlots = (from, to) => {
+      const startTime = moment("08:00:00", "HH:mm:ss");
+      const endTime = moment("22:00:00", "HH:mm:ss");
+      const interval = 30; // 30 minutes interval
+      const slots = [];
+
+      const userFrom = moment(from, "HH:mm:ss");
+      const userTo = moment(to, "HH:mm:ss");
+
+      while (startTime.isBefore(endTime)) {
+        const slotTime = startTime.format("HH:mm:ss");
+        const isAvailable = startTime.isSameOrAfter(userFrom) && startTime.isBefore(userTo);
+        slots.push({ slot: slotTime, available: isAvailable });
+        startTime.add(interval, "minutes");
+      }
+
+      return slots;
+    };
+
+    if (from && to) {
+      hotel.slots = generateSlots(from, to);
+    } else if (from || to) {
+      return res.status(400).send({ error: "Both 'from' and 'to' times must be provided to update slots" });
     }
-    if(hotelEmail){
-      hotel.hotelEmail = hotelEmail
-    }
-    if(contactDetails){
-      hotel.contactDetails = contactDetails
-    }
-    if(address){
-      hotel.address = address
-    }
-    if(link){
-      hotel.link = link
-    }
-    if(logo){
-      hotel.logo = logo
-    }
-    if(images){
-      hotel.images = images
-    }
-    if(videos){
-      hotel.videos = videos
-    }
-    if(map){
-      hotel.map = map
-    }
-    if(description){
-      hotel.description = description
-    }
-    if(confirmRegNumber){
-      hotel.confirmRegNumber = confirmRegNumber
-    }
-    if(area){
-      hotel.area = area
-    }
-    if(hotelStar){
-      hotel.hotelStar = hotelStar
-    }
-    if(propertyPapers){
-      hotel.propertyPapers = propertyPapers
-    }
-    if(aggrementPapers){
-      hotel.aggrementPapers = aggrementPapers
-    }
-    if(electricityBill){
-      hotel.electricityBill = electricityBill
-    }
-    if(cameras){
-      hotel.cameras = cameras
-    }
-    if(wifi){
-      hotel.wifi = wifi
-    }
-    if(ownerAdhaarCard){
-      hotel.ownerAdhaarCard = ownerAdhaarCard
-    }
-    if(ownerAdhaarCardNo){
-      hotel.ownerAdhaarCardNo = ownerAdhaarCardNo
-    }
-    if(ownerPanCard){
-      hotel.ownerPanCard = ownerPanCard
-    }
-    if(ownerPanCardNo){
-      hotel.ownerPanCardNo = ownerPanCardNo 
-    }
-    await hotel.save()
-    return res.status(200).send({ hotel : hotel, message : "Hotel Details Updated Successfully"  });
+
+    await hotel.save();
+    return res.status(200).send({ hotel, message: "Hotel Details Updated Successfully" });
   } catch (error) {
-    console.log("error"); 
+    console.log(error); 
     return res.status(500).send({ error: "Something broke" });
   }
 };
+
 
 exports.deleteHotel = async (req, res) => {
   try {
