@@ -11,10 +11,10 @@ function Sidebar() {
           <Link to="/dashboard">Dashboard</Link>
         </li>
         <li>
-          <Link to="/register-hotel">Register Hotel</Link> {/* Updated path */}
+          <Link to="/register-hotel">Register Hotel</Link>
         </li>
         <li>
-          <Link to="/hotel-list">Hotel List</Link> {/* Add this line */}
+          <Link to="/hotel-list">Hotel List</Link>
         </li>
       </ul>
     </div>

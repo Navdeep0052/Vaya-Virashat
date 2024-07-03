@@ -86,7 +86,7 @@ exports.registerHotel = async (req, res) => {
     // Function to generate slots
     const generateSlots = (from, to) => {
       const startTime = moment("08:00:00", "HH:mm:ss");
-      const endTime = moment("22:00:00", "HH:mm:ss");
+      const endTime = moment("23:00:00", "HH:mm:ss");
       const interval = 30; // 30 minutes interval
       const slots = [];
 

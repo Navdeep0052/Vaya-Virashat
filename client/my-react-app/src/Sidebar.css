@@ -1,35 +1,34 @@
-/* Sidebar.css */
 .sidebar {
-    width: 250px;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #333;
-    color: #dbba12;
-    padding: 15px;
-  }
-  
-  .sidebar h2 {
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .sidebar ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sidebar ul li {
-    margin-bottom: 1rem;
-  }
-  
-  .sidebar ul li a {
-    color: #dbba12;
-    text-decoration: none;
-  }
-  
-  .sidebar ul li a:hover {
-    text-decoration: underline;
-  }
-  
+  width: 250px;
+  height: 80vh;
+  position: fixed;
+  top: 120px; /* Adjust this value if your header's height changes */
+  left: 0;
+  background-color: #333;
+  color: #dbba12;
+  padding: 15px;
+  z-index: 1000;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 1rem;
+}
+
+.sidebar ul li a {
+  color: #dbba12;
+  text-decoration: none;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+}

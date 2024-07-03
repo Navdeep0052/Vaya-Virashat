@@ -1,6 +1,7 @@
 /* Dashboard.css */
 .dashboard-container {
     display: flex;
+    height: 100vh;
   }
   
   .dashboard-content {
