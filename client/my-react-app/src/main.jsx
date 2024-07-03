@@ -2,9 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import App from './App.jsx';
-import Signup from './Signup.jsx';
+import Signup from './Signin.jsx';
 import Login from './Login.jsx';
 import Home from './Signin.jsx';
+import Header from './Header';
+import Footer from './Footer';
+import HomePage from './HomePage.jsx';
+import Sidebar from './Sidebar';
 import Dashboard from './Dashboard.jsx'; // Import the Dashboard component
 import RegisterHotel from './Hotel.jsx'; // Import the RegisterHotel component
 import HotelList from './HotelList.jsx';
@@ -14,17 +18,22 @@ import './App.css';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/register-hotel" element={<RegisterHotel />} /> {/* Add this line */}
-        <Route path="/hotel-list" element={<HotelList />} /> {/* Add this line */}
-        <Route path="/edit-hotel/:hotelId" element={<RegisterHotel />} />
-        <Route path="/hotel-detail/:hotelId" element={<RegisterHotel />} />
-        <Route path="/app" element={<App />} />
-      </Routes>
+      <Header />
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/register-hotel" element={<RegisterHotel />} />
+          <Route path="/hotel-list" element={<HotelList />} />
+          <Route path="/edit-hotel/:hotelId" element={<RegisterHotel />} />
+          <Route path="/hotel-detail/:hotelId" element={<RegisterHotel />} />
+          <Route path="/hotels" element={<HomePage />} />
+          <Route path="/app" element={<App />} />
+        </Routes>
+      </main>
+      <Footer />
     </Router>
   </React.StrictMode>
 );

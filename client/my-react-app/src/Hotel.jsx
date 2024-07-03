@@ -9,6 +9,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import TextField from '@mui/material/TextField';
 import { format } from 'date-fns';  // Import format function from date-fns
 import './Hotel.css';
+import Sidebar from './Sidebar';
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
@@ -191,7 +192,9 @@ function RegisterHotel() {
   };
 
   return (
-    <div className="register-hotel-container">
+    <>
+    <Sidebar />
+     <div className="register-hotel-container" style={{ margin: '5rem 0' }}>
       <ToastContainer />
       <form className="register-hotel-form" onSubmit={handleSubmit}>
         <h2>{isEditMode ? 'Edit Hotel' : 'Register Hotel'}</h2>
@@ -493,6 +496,8 @@ function RegisterHotel() {
         <button type="submit">{isEditMode ? 'Update' : 'Register'}</button>
       </form>
     </div>
+    </>
+   
   );
 }
 

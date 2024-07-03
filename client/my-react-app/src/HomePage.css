@@ -1,0 +1,34 @@
+/* Card styles */
+.homepage-container {
+  padding-top: 60px; /* Adjust this value based on your header height */
+  padding-bottom: 60px;
+}
+
+.hotel-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fcfaec;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-logo {
+  width: 80%;
+  height: 80px;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-text a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.card-text a:hover {
+  text-decoration: underline;
+}

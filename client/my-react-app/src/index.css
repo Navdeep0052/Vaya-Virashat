@@ -25,9 +25,23 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  flex-direction: column;
   min-width: 320px;
   min-height: 100vh;
+}
+
+header {
+  flex-shrink: 0;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+main {
+  flex: 1;
+  padding-top: 60px; /* Adjust this value if your header's height changes */
+  padding-bottom: 60px; /* Adjust this value if your footer's height changes */
 }
 
 h1 {
@@ -52,6 +66,13 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
 @media (prefers-color-scheme: light) {
