@@ -9,7 +9,7 @@ const {verifyJwtToken, verifyOptionalJwtToken} = require("../middlewares/auth")
 router.post("/register", verifyJwtToken, ctrl.registerHotel)
 router.post("/upload", upload.array('files'), ctrl.uploadFiles)
 router.get("/listing", verifyJwtToken, ctrl.getRegisterHotel)
-router.get("/hotels/:hotelId", verifyJwtToken, ctrl.getHotelDetails)
+router.get("/hotels/:hotelId", ctrl.getHotelDetails)
 router.delete("/deleteHotel/:hotelId", verifyJwtToken, ctrl.deleteHotel)
 router.put("/editHotel/:hotelId", verifyJwtToken, ctrl.editHotel)
 

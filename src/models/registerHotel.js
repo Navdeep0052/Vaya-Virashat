@@ -1,4 +1,4 @@
-const {default :mongoose, Schema} = require("mongoose");
+const {default :mongoose, Schema, STATES} = require("mongoose");
 
 const registerHotelSchema = new Schema({
   ownerId: {
@@ -17,9 +17,15 @@ const registerHotelSchema = new Schema({
     type: String,
     require: true,
   },
-  address: {
+  locality: {
     type: String,
     require: true,
+  },
+  state : {
+    type : String,
+  },
+  city : {
+    type : String,
   },
   link: {
     type: String,
