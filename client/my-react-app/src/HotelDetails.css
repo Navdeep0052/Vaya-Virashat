@@ -17,6 +17,11 @@
     border-bottom: 1px solid #dee2e6;
 }
 
+/* *, ::after, ::before {
+    width: -webkit-fill-available;
+    box-sizing: border-box;
+} */
+
 .tab-button {
     border: none; /* Remove the border from individual buttons */
     background-color: transparent; /* Transparent background */
