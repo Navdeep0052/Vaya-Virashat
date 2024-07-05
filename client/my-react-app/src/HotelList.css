@@ -9,19 +9,21 @@
   height: 20vh;
 }
 
+
+.hotel-logo {
+  width: 100%;
+  height: 100px; /* Adjust height as needed to maintain consistent size */
+  object-fit: cover; /* Ensures images maintain aspect ratio without stretching */
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
 .hotel-card {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 1rem;
   background-color: #fcfaec;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.hotel-logo {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
 }
 
 .card-title {
