@@ -244,7 +244,6 @@ const HotelDetails = () => {
       <ToastContainer />
       <div className="row mt-4">
         <div className="col-md-3">
-          <Sidebar />
         </div>
         <div className="col-md-9">
           <h1 className="text-center mb-4">{hotelData.hotelName}</h1>

@@ -1,25 +1,101 @@
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 80vh;
-    background-image: url('https://flb-public.s3.ap-south-1.amazonaws.com/vayahome.jpg');
-    background-size: cover;
-    background-position: left;
-    background-repeat: no-repeat;
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('https://flb-public.s3.ap-south-1.amazonaws.com/vayahome.jpg');
+  background-size: cover;
+  background-position: left;
+  background-repeat: no-repeat;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
 
-  .login-form {
-    background-color: rgba(247, 247, 247, 0.9); /* Add some transparency */
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-  }
+.login-form {
+  background-color: rgba(247, 247, 247, 0.9); /* Add some transparency */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 400px; /* Adjust width as needed */
+}
 
-  .login-form-group {
-    margin-bottom: 1.5rem;
-  }
+.login-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #333;
+}
+
+.login-form input[type="text"],
+.login-form input[type="tel"],
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="tel"]:focus,
+.login-form input[type="email"]:focus,
+.login-form input[type="password"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.login-form button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.login-form button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.login-form button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.login-form button:hover {
+  background-color: #0056b3;
+}
+
+.login-form .switch {
+  background-color: transparent;
+  color: #007bff;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  text-decoration: underline;
+}
+
+.login-form .switch:hover {
+  color: #a1bddc;
+}
+
+.login-form .message {
+  color: #d9534f; /* Red color for error messages */
+  margin-bottom: 1rem;
+}

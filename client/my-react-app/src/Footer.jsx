@@ -1,9 +1,9 @@
 import React from 'react';
-import './Footer.css'; // Make sure to create and style this CSS file
+import './Footer.css'; // Assuming you have styled this CSS file
 
 const Footer = () => {
   return (
-    <footer className="footer fixed-bottom">
+    <footer className="footer">
       <div className="container text-center">
         <p>&copy; 2024 Your Company Name. All rights reserved.</p>
         <ul className="nav justify-content-center">
