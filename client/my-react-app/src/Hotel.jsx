@@ -22,7 +22,9 @@ function RegisterHotel() {
     hotelName: '',
     hotelEmail: '',
     contactDetails: '',
-    address: '',
+    locality: '',
+    state: '',
+    city: '',
     link: '',
     logo: '',
     images: [],
@@ -72,7 +74,9 @@ function RegisterHotel() {
         hotelName: hotel.hotelName || '',
         hotelEmail: hotel.hotelEmail || '',
         contactDetails: hotel.contactDetails || '',
-        address: hotel.address || '',
+        locality: hotel.locality || '',
+        state: hotel.state || '',
+        city: hotel.city || '',
         link: hotel.link || '',
         logo: hotel.logo || '',
         images: hotel.images || [],
@@ -231,10 +235,30 @@ function RegisterHotel() {
         <div className="form-group">
           <input
             type="text"
-            name="address"
-            value={hotelData.address}
+            name="locality"
+            value={hotelData.locality}
             onChange={handleChange}
-            placeholder="Address"
+            placeholder="locality"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="state"
+            value={hotelData.state}
+            onChange={handleChange}
+            placeholder="state"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            name="city"
+            value={hotelData.city}
+            onChange={handleChange}
+            placeholder="city"
             required
           />
         </div>

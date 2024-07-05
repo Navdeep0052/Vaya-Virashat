@@ -39,7 +39,7 @@ function HomePage() {
   }, []);
 
   const handleViewDetails = (hotelId) => {
-    navigate(`/hotel-detail/${hotelId}`);
+    navigate(`/HotelDetails/${hotelId}`);
   };
 
   if (loading) {

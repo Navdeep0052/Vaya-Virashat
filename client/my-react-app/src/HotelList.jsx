@@ -112,7 +112,9 @@ function HotelList() {
                       <Card.Text>
                         <strong>Contact Details :</strong> {hotel.contactDetails}
                       </Card.Text>
-                      <Card.Text><strong>Address :</strong> {hotel.address}</Card.Text>
+                      <Card.Text><strong>Address :</strong> {hotel.locality}</Card.Text>
+                      <Card.Text><strong>State :</strong> {hotel.state}</Card.Text>
+                      <Card.Text><strong>City :</strong> {hotel.city}</Card.Text>
                       <Card.Text><strong>Hotel Website :</strong>{" "}
                         <a
                           href={hotel.link}

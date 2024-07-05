@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Signup.css';
+import './Login.css';
 
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
@@ -51,10 +51,10 @@ function Login() {
   };
 
   return (
-    <div className='signup-container'>
-      <form className='signup-form' onSubmit={handleLogin}>
+    <div className='login-container'>
+      <form className='login-form' onSubmit={handleLogin}>
         <h2>Login</h2>
-        <div className='form-group'>
+        <div className='login-form-group'>
           <input
             type="email"
             name="email"

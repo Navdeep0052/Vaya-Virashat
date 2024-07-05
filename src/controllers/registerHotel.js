@@ -1,5 +1,6 @@
 const Hotel = require("../models/registerHotel");
 const moment = require("moment");
+const axios = require("axios");
 const {
   validateFields,
   validateFound,
@@ -57,7 +58,7 @@ exports.registerHotel = async (req, res) => {
       hotelName,
       hotelEmail,
       contactDetails,
-      address,
+      locality,
       link,
       logo,
       images,
@@ -81,6 +82,8 @@ exports.registerHotel = async (req, res) => {
       alldaysAvailable,
       from,
       to,
+      state,
+      city,
     } = req.body;
 
     // Function to generate slots
@@ -114,7 +117,7 @@ exports.registerHotel = async (req, res) => {
       hotelName,
       hotelEmail,
       contactDetails,
-      address,
+      locality,
       link,
       logo,
       images,
@@ -139,6 +142,8 @@ exports.registerHotel = async (req, res) => {
       from,
       to,
       slots,
+      state,
+      city
     };
 
     let hotel = await Hotel.create(request);
@@ -148,6 +153,8 @@ exports.registerHotel = async (req, res) => {
     return res.status(500).send({ error: "Something broke" });
   }
 };
+
+
 
 exports.getRegisterHotel = async (req, res) => {
   try {
@@ -173,6 +180,8 @@ exports.getHotelDetails = async (req, res) => {
   }
 };
 
+
+
 exports.editHotel = async (req, res) => {
   try {
     const hotelId = req.params.hotelId;
@@ -180,7 +189,7 @@ exports.editHotel = async (req, res) => {
       hotelName,
       hotelEmail,
       contactDetails,
-      address,  
+      locality,  
       link,
       logo,
       images,
@@ -202,7 +211,9 @@ exports.editHotel = async (req, res) => {
       alldaysAvailable,
       daysAvailiblity,
       from,
-      to
+      to,
+      state,
+      city
     } = req.body;
 
     const hotel = await Hotel.findById(hotelId);
@@ -211,7 +222,9 @@ exports.editHotel = async (req, res) => {
     if (hotelName) hotel.hotelName = hotelName;
     if (hotelEmail) hotel.hotelEmail = hotelEmail;
     if (contactDetails) hotel.contactDetails = contactDetails;
-    if (address) hotel.address = address;
+    if (locality) hotel.locality = locality;
+    if (state) hotel.state = state;
+    if (city) hotel.city = city;
     if (link) hotel.link = link;
     if (logo) hotel.logo = logo;
     if (images) hotel.images = images;
@@ -279,3 +292,106 @@ exports.deleteHotel = async (req, res) => {
     return res.status(500).send({ error: "Something broke" });
   }
 }
+
+exports.nearbyplace = async (req, res) => {
+  try {
+    const locality = req.query.locality;
+    const city = req.query.city;
+    const state = req.query.state;
+    const apiKey = 'AIzaSyC19RU976nEhgdaxTWpH3NPeuPuNJ05xAI'; // Replace with your Google API Key
+
+    if (!locality || !city || !state) {
+      return res.status(400).send({ status: 400, message: "locality, city, and state are required" });
+    }
+
+    const location = `${locality}, ${city}, ${state}`;
+
+    // Define URLs for different types of places
+    const placeTypes = [
+      { type: 'tourist_attractions', query: 'tourist attractions' },
+      { type: 'shopping_malls', query: 'shopping malls' },
+      { type: 'restaurants', query: 'restaurants'},
+      { type: 'schools', query: 'schools'},
+      { type: 'hospitals', query: 'hospitals'},
+      { type: 'airports', query: 'international terminal airport'},
+      { type: 'upcoming_Projects', query: 'government projects'}
+    ];
+
+    // Fetch data for each place type
+    const promises = placeTypes.map(async ({ type, query, icon }) => {
+      const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}+in+${encodeURIComponent(location)}&key=${apiKey}`;
+      const response = await axios.get(url);
+
+      if (response.data.status !== 'OK') {
+        throw new Error(`Failed to fetch nearby ${type}: ${response.data.error_message || 'Unknown error'}`);
+      }
+
+      const results = response.data.results;
+
+      // Fetch distances
+      const destinations = results.map(place => place.formatted_address).join('|');
+      const distanceUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(location)}&destinations=${encodeURIComponent(destinations)}&key=${apiKey}`;
+      const distanceResponse = await axios.get(distanceUrl);
+
+      if (distanceResponse.data.status !== 'OK') {
+        throw new Error(`Failed to fetch distances for ${type}: ${distanceResponse.data.error_message || 'Unknown error'}`);
+      }
+
+      const distances = distanceResponse.data.rows[0].elements;
+
+      // Prepare formatted places array
+      const places = results.map((place, index) => ({
+        name: place.name,
+        address: place.formatted_address,
+        mapUrl: `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
+        embeddedMapUrl: `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=place_id:${place.place_id}`,
+        distance: distances[index].distance.text,
+        duration: distances[index].duration.text
+      }));
+
+      return {
+        type,
+        places
+      };
+    });
+
+    // Fetch coordinates for the searched location
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${apiKey}`;
+    const geocodeResponse = await axios.get(geocodeUrl);
+
+    if (geocodeResponse.data.status !== 'OK') {
+      throw new Error(`Failed to fetch location coordinates: ${geocodeResponse.data.error_message || 'Unknown error'}`);
+    }
+
+    const coordinates = geocodeResponse.data.results[0].geometry.location;
+    const mapLocationUrl = `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`;
+    const embeddedMapUrl = `https://www.google.com/maps/embed/v1/view?key=${apiKey}&center=${coordinates.lat},${coordinates.lng}&zoom=15`; // Include center and zoom parameters
+
+    // Execute all promises concurrently
+    const results = await Promise.all(promises);
+
+    // Prepare final response
+    const finalResponse = {
+      status: 200,
+      searchedLocation: {
+        locality,
+        city,
+        state,
+        mapLocationUrl,
+        embeddedMapUrl
+      },
+      highlights: results.find(result => result.type === 'tourist_attractions').places,
+      shoppingMalls: results.find(result => result.type === 'shopping_malls').places,
+      restaurants: results.find(result => result.type === 'restaurants').places,
+      schools: results.find(result => result.type === 'schools').places,
+      hospitals: results.find(result => result.type === 'hospitals').places,
+      airports: results.find(result => result.type === 'airports').places,
+      UpcomingProjects: results.find(result => result.type === 'upcoming_Projects').places
+    };
+
+    res.status(200).send(finalResponse);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error : "Something went wrong" });
+  }
+};
