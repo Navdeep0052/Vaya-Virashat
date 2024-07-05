@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { Container, Row, Col, Card, Spinner, Button } from "react-bootstrap";
 import { FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "./Sidebar"; 
+import Sidebar from "./Sidebar";
 import "./HotelList.css";
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
@@ -71,7 +71,7 @@ function HotelList() {
   };
 
   const handleViewDetails = (hotelId) => {
-    navigate(`/hotel-detail/${hotelId}`);
+    navigate(`/HotelDetails/${hotelId}`);
   };
 
   if (loading) {
@@ -92,9 +92,9 @@ function HotelList() {
         </Col>
         <Col md={9}>
           {hotels.length > 0 ? (
-            <Row>
-              {hotels.map((hotel) => (
-                <Col xs={12} key={hotel._id} className="mb-4">
+            hotels.map((hotel) => (
+              <Row key={hotel._id} className="mb-4">
+                <Col xs={3}>
                   <Card className="hotel-card">
                     <Card.Img
                       variant="top"
@@ -102,54 +102,46 @@ function HotelList() {
                       alt={hotel.hotelName}
                       className="hotel-logo"
                     />
+                  </Card>
+                </Col>
+                <Col xs={6}>
+                  <Card className="hotel-card">
                     <Card.Body>
-                      <Card.Title className="card-title" onClick={() => handleViewDetails(hotel._id)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                      <Card.Title
+                        className="card-title"
+                        onClick={() => handleViewDetails(hotel._id)}
+                        style={{
+                          cursor: "pointer",
+                          color: "blue",
+                          textDecoration: "underline",
+                        }}
+                      >
                         {hotel.hotelName}
                       </Card.Title>
                       <Card.Text>
                         <strong>Hotel Email :</strong> {hotel.hotelEmail}
                       </Card.Text>
-                      <Card.Text>
-                        <strong>Contact Details :</strong> {hotel.contactDetails}
-                      </Card.Text>
-                      <Card.Text><strong>Address :</strong> {hotel.locality}</Card.Text>
-                      <Card.Text><strong>State :</strong> {hotel.state}</Card.Text>
-                      <Card.Text><strong>City :</strong> {hotel.city}</Card.Text>
-                      <Card.Text><strong>Hotel Website :</strong>{" "}
-                        <a
-                          href={hotel.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="card-link"
-                        >
-                          {hotel.link}
-                        </a>
-                      </Card.Text>
-                      <Card.Text className="card-description">
-                        <strong>Description :</strong> {hotel.description}
-                      </Card.Text>
-                      <Card.Text><strong>Rating :</strong> {hotel.hotelStar}</Card.Text>
-                      <div className="d-flex justify-content-end">
-                        <Button
-                          variant="outline-primary"
-                          onClick={() => handleEdit(hotel._id)}
-                          className="edit-button me-2"
-                        >
-                          <FaEdit /> Edit
-                        </Button>
-                        <Button
-                          variant="danger"
-                          onClick={() => handleDelete(hotel._id)}
-                          className="delete-button"
-                        >
-                          Delete
-                        </Button>
-                      </div>
                     </Card.Body>
                   </Card>
                 </Col>
-              ))}
-            </Row>
+                <Col xs={3} className="d-flex align-items-center justify-content-end">
+                  <Button
+                    variant="outline-primary"
+                    onClick={() => handleEdit(hotel._id)}
+                    className="edit-button me-2"
+                  >
+                    <FaEdit /> Edit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(hotel._id)}
+                    className="delete-button"
+                  >
+                    Delete
+                  </Button>
+                </Col>
+              </Row>
+            ))
           ) : (
             <p>No hotels registered yet.</p>
           )}
