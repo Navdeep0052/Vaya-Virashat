@@ -189,7 +189,7 @@ exports.editHotel = async (req, res) => {
       hotelName,
       hotelEmail,
       contactDetails,
-      address,  
+      locality,  
       link,
       logo,
       images,
@@ -211,7 +211,9 @@ exports.editHotel = async (req, res) => {
       alldaysAvailable,
       daysAvailiblity,
       from,
-      to
+      to,
+      state,
+      city
     } = req.body;
 
     const hotel = await Hotel.findById(hotelId);
@@ -220,7 +222,9 @@ exports.editHotel = async (req, res) => {
     if (hotelName) hotel.hotelName = hotelName;
     if (hotelEmail) hotel.hotelEmail = hotelEmail;
     if (contactDetails) hotel.contactDetails = contactDetails;
-    if (address) hotel.address = address;
+    if (locality) hotel.locality = locality;
+    if (state) hotel.state = state;
+    if (city) hotel.city = city;
     if (link) hotel.link = link;
     if (logo) hotel.logo = logo;
     if (images) hotel.images = images;
@@ -289,107 +293,6 @@ exports.deleteHotel = async (req, res) => {
   }
 }
 
-
-// exports.nearbyplace = async (req, res) => {
-//   try {
-//     const locality = req.query.locality;
-//     const city = req.query.city;
-//     const state = req.query.state;
-//     const apiKey = 'AIzaSyC19RU976nEhgdaxTWpH3NPeuPuNJ05xAI'; // Replace with your Google API Key
-
-//     if (!locality || !city || !state) {
-//       return res.status(400).send({ status: 400, message: "locality, city, and state are required" });
-//     }
-
-//     const location = `${locality}, ${city}, ${state}`;
-//     const touristAttractionsUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=tourist+attractions+in+${encodeURIComponent(location)}&type=tourist_attraction&key=${apiKey}`;
-//     const shoppingMallsUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=shopping+malls+in+${encodeURIComponent(location)}&type=shopping_mall&key=${apiKey}`;
-
-//     const [touristAttractionsResponse, shoppingMallsResponse] = await Promise.all([
-//       axios.get(touristAttractionsUrl),
-//       axios.get(shoppingMallsUrl)
-//     ]);
-
-//     if (touristAttractionsResponse.data.status !== 'OK') {
-//       return res.status(500).send({ status: 500, message: touristAttractionsResponse.data.error_message || 'Failed to fetch nearby tourist attractions' });
-//     }
-
-//     if (shoppingMallsResponse.data.status !== 'OK') {
-//       return res.status(500).send({ status: 500, message: shoppingMallsResponse.data.error_message || 'Failed to fetch nearby shopping malls' });
-//     }
-
-//     const touristAttractions = touristAttractionsResponse.data.results;
-//     const shoppingMalls = shoppingMallsResponse.data.results;
-
-//     const origins = [`${locality}, ${city}, ${state}`];
-
-//     // Fetch distances for tourist attractions
-//     const touristAttractionsDestinations = touristAttractions.map(place => place.formatted_address).join('|');
-//     const touristAttractionsDistanceUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origins)}&destinations=${encodeURIComponent(touristAttractionsDestinations)}&key=${apiKey}`;
-//     const touristAttractionsDistanceResponse = await axios.get(touristAttractionsDistanceUrl);
-
-//     if (touristAttractionsDistanceResponse.data.status !== 'OK') {
-//       return res.status(500).send({ status: 500, message: touristAttractionsDistanceResponse.data.error_message || 'Failed to fetch distances for tourist attractions' });
-//     }
-
-//     const touristAttractionsDistances = touristAttractionsDistanceResponse.data.rows[0].elements;
-
-//     const highlights = touristAttractions.map((place, index) => {
-//       return {
-//         name: place.name,
-//         address: place.formatted_address,
-//         mapUrl: `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
-//         distance: touristAttractionsDistances[index].distance.text
-//       };
-//     });
-
-//     // Fetch distances for shopping malls
-//     const shoppingMallsDestinations = shoppingMalls.map(place => place.formatted_address).join('|');
-//     const shoppingMallsDistanceUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origins)}&destinations=${encodeURIComponent(shoppingMallsDestinations)}&key=${apiKey}`;
-//     const shoppingMallsDistanceResponse = await axios.get(shoppingMallsDistanceUrl);
-
-//     if (shoppingMallsDistanceResponse.data.status !== 'OK') {
-//       return res.status(500).send({ status: 500, message: shoppingMallsDistanceResponse.data.error_message || 'Failed to fetch distances for shopping malls' });
-//     }
-
-//     const shoppingMallsDistances = shoppingMallsDistanceResponse.data.rows[0].elements;
-
-//     const shoppingMallsList = shoppingMalls.map((place, index) => {
-//       return {
-//         name: place.name,
-//         address: place.formatted_address,
-//         mapUrl: `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
-//         distance: shoppingMallsDistances[index].distance.text
-//       };
-//     });
-
-//     // Get coordinates of the searched location
-//     const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${apiKey}`;
-//     const geocodeResponse = await axios.get(geocodeUrl);
-
-//     if (geocodeResponse.data.status !== 'OK') {
-//       return res.status(500).send({ status: 500, message: geocodeResponse.data.error_message || 'Failed to fetch location coordinates' });
-//     }
-
-//     const coordinates = geocodeResponse.data.results[0].geometry.location;
-//     const mapLocationUrl = `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`;
-
-//     res.status(200).send({
-//       status: 200,
-//       searchedLocation: {
-//         locality,
-//         city,
-//         state,
-//         mapLocationUrl
-//       },
-//       highlights,
-//       shoppingMalls: shoppingMallsList
-//     });
-//   } catch (err) {
-//     return res.status(500).send({ status: 500, message: err.message });
-//   }
-// };
-
 exports.nearbyplace = async (req, res) => {
   try {
     const locality = req.query.locality;
@@ -441,8 +344,9 @@ exports.nearbyplace = async (req, res) => {
         name: place.name,
         address: place.formatted_address,
         mapUrl: `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
+        embeddedMapUrl: `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=place_id:${place.place_id}`,
         distance: distances[index].distance.text,
-        icon
+        duration: distances[index].duration.text
       }));
 
       return {
@@ -461,6 +365,7 @@ exports.nearbyplace = async (req, res) => {
 
     const coordinates = geocodeResponse.data.results[0].geometry.location;
     const mapLocationUrl = `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`;
+    const embeddedMapUrl = `https://www.google.com/maps/embed/v1/view?key=${apiKey}&center=${coordinates.lat},${coordinates.lng}&zoom=15`; // Include center and zoom parameters
 
     // Execute all promises concurrently
     const results = await Promise.all(promises);
@@ -472,7 +377,8 @@ exports.nearbyplace = async (req, res) => {
         locality,
         city,
         state,
-        mapLocationUrl
+        mapLocationUrl,
+        embeddedMapUrl
       },
       highlights: results.find(result => result.type === 'tourist_attractions').places,
       shoppingMalls: results.find(result => result.type === 'shopping_malls').places,

@@ -10,6 +10,7 @@ const apiurl = import.meta.env.VITE_BASE_API_URL;
 const HotelDetails = () => {
   const { hotelId } = useParams();
   const [hotelData, setHotelData] = useState(null);
+  const [nearbyPlaces, setNearbyPlaces] = useState(null);
   const [activeTab, setActiveTab] = useState('general');
 
   useEffect(() => {
@@ -30,9 +31,18 @@ const HotelDetails = () => {
 
       const data = await response.json();
       setHotelData(data.hotel);
+
+      // Fetch nearby places
+      const nearbyResponse = await fetch(`http://localhost:8000/getNearByPlaces?locality=${data.hotel.locality}&city=${data.hotel.city}&state=${data.hotel.state}`);
+      if (!nearbyResponse.ok) {
+        throw new Error('Failed to fetch nearby places');
+      }
+
+      const nearbyData = await nearbyResponse.json();
+      setNearbyPlaces(nearbyData);
     } catch (error) {
-      console.error('Error fetching hotel data:', error);
-      toast.error('Failed to fetch hotel data');
+      console.error('Error fetching data:', error);
+      toast.error('Failed to fetch data');
     }
   };
 
@@ -177,39 +187,78 @@ const HotelDetails = () => {
             </div>
           </>
         );
+      case 'nearby':
+        return (
+          <>
+            <div className="detail-item">
+              <strong>Location:</strong>
+              <div>{nearbyPlaces.searchedLocation.locality}, {nearbyPlaces.searchedLocation.city}, {nearbyPlaces.searchedLocation.state}</div>
+              <iframe
+                src={nearbyPlaces.searchedLocation.embeddedMapUrl}
+                title="Map"
+                width="100%"
+                height="400"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+            <div className="detail-item">
+              <strong>Highlights:</strong>
+              {nearbyPlaces.highlights.map((place, index) => (
+                <div key={index}>
+                  <div>{place.name}</div>
+                  <div>{place.address}</div>
+                  <div>Distance: {place.distance}</div>
+                  <div>Duration: {place.duration}</div>
+                  <div><a href={place.mapUrl} target="_blank" rel="noopener noreferrer">View on Map</a></div>
+                </div>
+              ))}
+            </div>
+            <div className="detail-item">
+              <strong>Shopping Malls:</strong>
+              {nearbyPlaces.shoppingMalls.map((mall, index) => (
+                <div key={index}>
+                  <div>{mall.name}</div>
+                  <div>{mall.address}</div>
+                  <div>Distance: {mall.distance}</div>
+                  <div>Duration: {mall.duration}</div>
+                  <div><a href={mall.mapUrl} target="_blank" rel="noopener noreferrer">View on Map</a></div>
+                </div>
+              ))}
+            </div>
+          </>
+        );
       default:
         return null;
     }
   };
 
   if (!hotelData) {
-    return <div className="text-center my-5">Loading...</div>;
+    return <div className="text-center my-5">Loading hotel details...</div>;
   }
 
   return (
-    <>
-      <div className="container my-5">
-        <ToastContainer />
-        <h2 className="text-center mb-4">{hotelData.hotelName}</h2>
-        <ul className="nav nav-tabs justify-content-center mb-4">
-          <li className="nav-item">
-            <button className={`nav-link ${activeTab === 'general' ? 'active' : ''}`} onClick={() => setActiveTab('general')}>General</button>
-          </li>
-          <li className="nav-item">
-            <button className={`nav-link ${activeTab === 'facilities' ? 'active' : ''}`} onClick={() => setActiveTab('facilities')}>Facilities</button>
-          </li>
-          <li className="nav-item">
-            <button className={`nav-link ${activeTab === 'owner' ? 'active' : ''}`} onClick={() => setActiveTab('owner')}>Owner</button>
-          </li>
-          <li className="nav-item">
-            <button className={`nav-link ${activeTab === 'media' ? 'active' : ''}`} onClick={() => setActiveTab('media')}>Media</button>
-          </li>
-        </ul>
-        <div className="tab-content">
-          {renderTabContent()}
+    <div className="container">
+      <ToastContainer />
+      <div className="row mt-4">
+        <div className="col-md-3">
+          <Sidebar />
+        </div>
+        <div className="col-md-9">
+          <h1 className="text-center mb-4">{hotelData.hotelName}</h1>
+          <div className="tabs">
+            <button className={`tab-button ${activeTab === 'general' ? 'active' : ''}`} onClick={() => setActiveTab('general')}>General</button>
+            <button className={`tab-button ${activeTab === 'facilities' ? 'active' : ''}`} onClick={() => setActiveTab('facilities')}>Facilities</button>
+            <button className={`tab-button ${activeTab === 'owner' ? 'active' : ''}`} onClick={() => setActiveTab('owner')}>Owner</button>
+            <button className={`tab-button ${activeTab === 'media' ? 'active' : ''}`} onClick={() => setActiveTab('media')}>Media</button>
+            <button className={`tab-button ${activeTab === 'nearby' ? 'active' : ''}`} onClick={() => setActiveTab('nearby')}>Nearby Places</button>
+          </div>
+          <div className="tab-content">{renderTabContent()}</div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
