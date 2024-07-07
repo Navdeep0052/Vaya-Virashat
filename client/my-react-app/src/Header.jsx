@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import './Header.css'; // Make sure to create and style this CSS file
 
 const Header = () => {
+  const token = localStorage.getItem('token'); // Check if the user is logged in
+  const role = localStorage.getItem('role'); // Get the role from local storage
+
   return (
     <header className="header fixed-top">
       <div className="">
@@ -12,9 +15,21 @@ const Header = () => {
           </Link>
           <nav>
             <ul className="nav">
-              {/* <li className="nav-item"><Link to="/hotels" className="nav-link">Hotels</Link></li> */}
-              <li className="nav-item"><Link to="/login" className="nav-link">Login</Link></li>
-              <li className="nav-item"><Link to="/signup" className="nav-link">Sign Up</Link></li>
+              {!token && (
+                <>
+                  <li className="nav-item">
+                    <Link to="/login" className="nav-link">Login</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link to="/signup" className="nav-link">Sign Up</Link>
+                  </li>
+                </>
+              )}
+              {token && (
+                <li className="nav-item">
+                  <Link to={`/${role}-dashboard`} className="nav-link">Dashboard</Link>
+                </li>
+              )}
             </ul>
           </nav>
         </div>

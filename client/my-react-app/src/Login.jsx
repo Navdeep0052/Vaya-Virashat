@@ -1,10 +1,8 @@
-// Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
-
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
@@ -23,7 +21,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch(apiurl +  '/login', {
+      const response = await fetch(apiurl + '/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -40,7 +38,12 @@ function Login() {
       if (data.user && data.message) {
         toast.success(data.message); // Display success message
         localStorage.setItem('token', data.user.token);
-        navigate('/dashboard'); // Redirect to dashboard after successful login
+        localStorage.setItem('role', data.user.role); // Store user role
+        if (data.user.role === 'admin') {
+          navigate('/admin-dashboard'); // Redirect to admin dashboard
+        } else {
+          navigate('/owner-dashboard'); // Redirect to owner dashboard
+        }
       } else {
         throw new Error('Invalid response from server');
       }

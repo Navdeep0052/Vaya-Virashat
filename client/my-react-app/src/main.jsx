@@ -10,9 +10,10 @@ import Footer from './Footer';
 import HomePage from './HomePage.jsx';
 import Sidebar from './Sidebar';
 import HotelDetails from './HotelDetails.jsx';
-import Dashboard from './Dashboard.jsx'; // Import the Dashboard component
-import RegisterHotel from './Hotel.jsx'; // Import the RegisterHotel component
+import Dashboard from './Dashboard.jsx';
+import RegisterHotel from './Hotel.jsx';
 import HotelList from './HotelList.jsx';
+import AdminDashboard from './AdminDashboard.jsx'; // Import the AdminDashboard component
 import './index.css';
 import './App.css'; 
 
@@ -25,7 +26,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/owner-dashboard" element={<Dashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} /> {/* New Route for AdminDashboard */}
           <Route path="/register-hotel" element={<RegisterHotel />} />
           <Route path="/hotel-list" element={<HotelList />} />
           <Route path="/edit-hotel/:hotelId" element={<RegisterHotel />} />
