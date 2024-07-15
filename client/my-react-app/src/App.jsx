@@ -1,11 +1,12 @@
-// App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Signin';
-import RegisterHotel from './Hotel'; // Assuming this is the component for registering a hotel
+import RegisterHotel from './Hotel';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Dashboard from './Dashboard';
+import AdminDashboard from './AdminDashboard'; // Import AdminDashboard
 
 function App() {
   return (
@@ -24,8 +25,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/register" element={<RegisterHotel />} />
+          <Route path="/owner-dashboard" element={<Dashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} /> {/* New Route for AdminDashboard */}
+          <Route path="/register-hotel" element={<RegisterHotel />} />
         </Routes>
       </Router>
     </>

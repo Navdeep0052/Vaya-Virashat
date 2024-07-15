@@ -49,7 +49,8 @@ exports.loginUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        phone : user.phone
+        phone : user.phone,
+        role : user.role
       };
      
       const token = createJwtToken(payload);

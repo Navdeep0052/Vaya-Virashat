@@ -2,20 +2,26 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
 
-function Sidebar() {
+function Sidebar({ role }) {
   return (
     <div className="sidebar">
       <h2>Menu</h2>
       <ul>
         <li>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to={role === 'admin' ? "/admin-dashboard" : "/owner-dashboard"}>Dashboard</Link>
         </li>
         <li>
           <Link to="/register-hotel">Register Hotel</Link>
         </li>
-        <li>
-          <Link to="/hotel-list">Hotel List</Link>
-        </li>
+        {role === 'admin' ? (
+          <li>
+            <Link to="/hotels">All Hotels</Link>
+          </li>
+        ) : (
+          <li>
+            <Link to="/hotel-list">Hotel List</Link>
+          </li>
+        )}
       </ul>
     </div>
   );
