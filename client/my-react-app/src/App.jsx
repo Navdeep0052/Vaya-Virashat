@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Signin';
 import RegisterHotel from './Hotel';
@@ -6,9 +6,18 @@ import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dashboard from './Dashboard';
-import AdminDashboard from './AdminDashboard'; // Import AdminDashboard
+import AdminDashboard from './AdminDashboard';
+import Login from './Login'; // Import Login component
 
 function App() {
+  const [role, setRole] = useState(localStorage.getItem('role') || '');
+
+  // Function to update role in App component state and local storage
+  const setRoleAndUpdateStorage = (newRole) => {
+    localStorage.setItem('role', newRole);
+    setRole(newRole);
+  };
+
   return (
     <>
       <ToastContainer
@@ -24,10 +33,11 @@ function App() {
       />
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home setRole={setRoleAndUpdateStorage} />} />
           <Route path="/owner-dashboard" element={<Dashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} /> {/* New Route for AdminDashboard */}
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/register-hotel" element={<RegisterHotel />} />
+          <Route path="/login" element={<Login setRole={setRoleAndUpdateStorage} />} /> {/* Route for Login */}
         </Routes>
       </Router>
     </>

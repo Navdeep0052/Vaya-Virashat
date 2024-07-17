@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
 
-function Sidebar({ role }) {
+function Sidebar() {
+  const role = localStorage.getItem('role'); // Get role from local storage
+
   return (
     <div className="sidebar">
       <h2>Menu</h2>

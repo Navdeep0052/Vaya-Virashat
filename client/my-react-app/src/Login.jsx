@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
-function Login() {
+function Login({ setRole }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
-      ...prevData, [name]: value
+      ...prevData,
+      [name]: value
     }));
   };
 
@@ -35,11 +36,12 @@ function Login() {
 
       const data = await response.json();
 
-      if (data.user && data.message) {
-        toast.success(data.message); // Display success message
+      if (data.user && data.user.token) {
+        toast.success('Login successful'); // Display success message
         localStorage.setItem('token', data.user.token);
         localStorage.setItem('role', data.user.role); // Store user role
         if (data.user.role === 'admin') {
+          console.log(true)
           navigate('/admin-dashboard'); // Redirect to admin dashboard
         } else {
           navigate('/owner-dashboard'); // Redirect to owner dashboard

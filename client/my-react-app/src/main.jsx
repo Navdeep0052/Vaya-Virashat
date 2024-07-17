@@ -13,15 +13,19 @@ import HotelDetails from './HotelDetails.jsx';
 import Dashboard from './Dashboard.jsx';
 import RegisterHotel from './Hotel.jsx';
 import HotelList from './HotelList.jsx';
-import AdminDashboard from './AdminDashboard.jsx'; // Import the AdminDashboard component
+import AdminDashboard from './AdminDashboard.jsx'; 
+import Profile from './profile.jsx';
 import './index.css';
 import './App.css'; 
+
+const apiurl = import.meta.env.VITE_BASE_API_URL;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Router>
       <Header />
       <main className="main-content">
+      <Profile apiurl={apiurl} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
