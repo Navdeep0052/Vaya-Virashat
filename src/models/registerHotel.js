@@ -112,6 +112,10 @@ const registerHotelSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  shortList: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Hotel = mongoose.model("hotel", registerHotelSchema);

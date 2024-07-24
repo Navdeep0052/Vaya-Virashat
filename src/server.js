@@ -5,11 +5,11 @@ const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
 const dotenv = require("dotenv");
+const { app, server } = require("./socket.io/socket"); // Assuming socket.io/socket exports both app and server
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, './.env') });
 
-const app = express();
 const port = 8000;
 
 const database = "mongodb+srv://apisp:YC0KQIOhLAmUBy0l@cluster0.oxrsqmy.mongodb.net/apisp?retryWrites=true&w=majority";
@@ -31,6 +31,6 @@ fs.readdirSync("./routers").map((r) => {
     app.use("/", require(`./routers/${r}`));
 });
 
-app.listen(port, () => {
-    console.log(`app is running on ${port}`);
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
