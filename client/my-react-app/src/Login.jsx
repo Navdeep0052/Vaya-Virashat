@@ -40,9 +40,9 @@ function Login({ setRole }) {
         toast.success('Login successful'); // Display success message
         localStorage.setItem('token', data.user.token);
         localStorage.setItem('role', data.user.role); // Store user role
-        if (data.user.role === 'admin') {
+        if (data.user.role === 'executive') {
           console.log(true)
-          navigate('/admin-dashboard'); // Redirect to admin dashboard
+          navigate('/executive-dashboard'); // Redirect to admin dashboard
         } else {
           navigate('/owner-dashboard'); // Redirect to owner dashboard
         }

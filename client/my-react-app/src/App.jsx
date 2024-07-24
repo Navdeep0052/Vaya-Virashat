@@ -35,7 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home setRole={setRoleAndUpdateStorage} />} />
           <Route path="/owner-dashboard" element={<Dashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/executive-dashboard" element={<AdminDashboard />} />
           <Route path="/register-hotel" element={<RegisterHotel />} />
           <Route path="/login" element={<Login setRole={setRoleAndUpdateStorage} />} /> {/* Route for Login */}
         </Routes>

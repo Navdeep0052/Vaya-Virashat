@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Sidebar from './Sidebar';
-import './HomePage.css'; // You can create this CSS file for styling
+import ShortlistHotel from './ShortlistHotel'; // Import the ShortlistHotel component
+import './HotelCards.css';
+import { FaEdit } from 'react-icons/fa';
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
 function HomePage() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showEditDelete, setShowEditDelete] = useState(false); // Track if "All Hotels" is clicked
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +45,31 @@ function HomePage() {
     navigate(`/HotelDetails/${hotelId}`);
   };
 
+  const handleEdit = (hotelId) => {
+    navigate(`/edit-hotel/${hotelId}`);
+  };
+
+  const handleDelete = async (hotelId) => {
+    try {
+      const response = await fetch(`${apiurl}/deleteHotel/${hotelId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      });
+
+      if (response.ok) {
+        setHotels((prevHotels) => prevHotels.filter((hotel) => hotel._id !== hotelId));
+        toast.success('Hotel deleted successfully!');
+      } else {
+        const data = await response.json();
+        toast.error(data.error || 'Deletion failed. Please try again.');
+      }
+    } catch (error) {
+      toast.error('An error occurred. Please try again.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="loading-spinner">
@@ -56,6 +84,7 @@ function HomePage() {
     <Container fluid className="homepage-container">
       <Row>
         <Col md={3}>
+          <Sidebar onAllHotelsClick={() => setShowEditDelete(true)} /> {/* Pass the handler */}
         </Col>
         <Col md={9}>
           <Row>
@@ -86,6 +115,25 @@ function HomePage() {
                       <Card.Text>
                         <strong>Address :</strong> {hotel.address}
                       </Card.Text>
+                      <ShortlistHotel hotelId={hotel._id} /> {/* Add the ShortlistHotel component */}
+                      {showEditDelete && ( // Conditionally render edit and delete buttons
+                        <>
+                          <Button
+                            variant="outline-primary"
+                            onClick={() => handleEdit(hotel._id)}
+                            className="edit-button me-2"
+                          >
+                            <FaEdit /> Edit
+                          </Button>
+                          <Button
+                            variant="danger"
+                            onClick={() => handleDelete(hotel._id)}
+                            className="delete-button"
+                          >
+                            Delete
+                          </Button>
+                        </>
+                      )}
                     </Card.Body>
                   </Card>
                 </Col>

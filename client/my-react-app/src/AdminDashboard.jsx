@@ -9,7 +9,7 @@ function AdminDashboard() {
     <div className="dashboard-container">
       <Sidebar role={role} />
       <div className="dashboard-content">
-        <h2>Welcome to Admin Dashboard</h2>
+        <h2>Welcome to Executive Dashboard</h2>
         <p>This is your static dashboard content.</p>
         {/* Add more static content as needed */}
       </div>

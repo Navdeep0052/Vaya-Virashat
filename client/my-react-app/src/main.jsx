@@ -7,7 +7,7 @@ import Login from './Login.jsx';
 import Home from './Signin.jsx';
 import Header from './Header';
 import Footer from './Footer';
-import HomePage from './HomePage.jsx';
+import HomePage from './HotelCards.jsx';
 import Sidebar from './Sidebar';
 import HotelDetails from './HotelDetails.jsx';
 import Dashboard from './Dashboard.jsx';
@@ -31,7 +31,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/owner-dashboard" element={<Dashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} /> {/* New Route for AdminDashboard */}
+          <Route path="/executive-dashboard" element={<AdminDashboard />} /> {/* New Route for AdminDashboard */}
           <Route path="/register-hotel" element={<RegisterHotel />} />
           <Route path="/hotel-list" element={<HotelList />} />
           <Route path="/edit-hotel/:hotelId" element={<RegisterHotel />} />

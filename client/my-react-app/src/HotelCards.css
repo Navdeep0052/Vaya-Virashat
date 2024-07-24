@@ -1,0 +1,139 @@
+.homepage-container {
+  padding-top: 60px; /* Adjust this value based on your header height */
+  padding-bottom: 60px;
+}
+
+.hotel-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fcfaec;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-logo {
+  width: 80%;
+  height: 80px;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-text a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.card-text a:hover {
+  text-decoration: underline;
+}
+
+.hotel-details-container {
+  padding: 2rem;
+  margin: 5rem 0;
+}
+
+.hotel-details h1 {
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #343a40;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around; /* Adjust spacing between buttons */
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.tab-button {
+  border: none; /* Remove the border from individual buttons */
+  background-color: transparent; /* Transparent background */
+  color: #495057;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  margin-bottom: -1px; /* To align with tab content border */
+}
+
+.tab-button.active {
+  background-color: #007bff;
+  color: white;
+  border-bottom: 2px solid #007bff; /* Highlight active tab */
+}
+
+.tab-button:hover {
+  background-color: #e9ecef;
+  color: #007bff;
+}
+
+.tab-content .detail-item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  background-color: #f8f9fa;
+}
+
+.tab-content .detail-item strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #343a40;
+}
+
+.preview-logo img,
+.preview-images img,
+.preview-videos video,
+.preview-document img {
+  width: 100%;
+  max-width: 200px;
+  margin: 0.5rem;
+  display: inline-block;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.my-5 {
+  margin-top: 3rem !important;
+  margin-bottom: 3rem !important;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.toast-container {
+  z-index: 1060;
+}
+
+.preview-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.preview-videos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .preview-logo img,
+  .preview-images img,
+  .preview-videos video,
+  .preview-document img {
+    max-width: 150px;
+  }
+}
