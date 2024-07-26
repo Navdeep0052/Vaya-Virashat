@@ -38,13 +38,28 @@ function Login({ setRole }) {
 
       if (data.user && data.user.token) {
         toast.success('Login successful'); // Display success message
+
+        // Store token and role
         localStorage.setItem('token', data.user.token);
-        localStorage.setItem('role', data.user.role); // Store user role
+        localStorage.setItem('role', data.user.role);
+        localStorage.setItem('userId', data.user._id);
+
+
+
+        // Decode token to get user ID
+        const token = data.user.token;
+        const tokenParts = token.split(".");
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const userId = payload._id;
+
+        // Store user ID in local storage
+        localStorage.setItem('userId', userId);
+
+        // Redirect based on role
         if (data.user.role === 'executive') {
-          console.log(true)
-          navigate('/executive-dashboard'); // Redirect to admin dashboard
+          navigate('/executive-dashboard');
         } else {
-          navigate('/owner-dashboard'); // Redirect to owner dashboard
+          navigate('/owner-dashboard');
         }
       } else {
         throw new Error('Invalid response from server');

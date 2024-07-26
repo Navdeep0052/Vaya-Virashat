@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-const Profile = ({ apiurl }) => {
+const Profile = ({ apiurl, socket }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Function to fetch user profile data
     const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -28,8 +29,17 @@ const Profile = ({ apiurl }) => {
       }
     };
 
+    // Call the function to fetch user profile
     fetchUserProfile();
-  }, [apiurl]);
+
+    // Establish socket connection when component mounts
+    socket?.connect();
+
+    // Disconnect socket when component unmounts
+    return () => {
+      socket?.disconnect();
+    };
+  }, [apiurl, socket]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -43,8 +53,8 @@ const Profile = ({ apiurl }) => {
     <div>
       {userProfile ? (
         <div>
-          <p>Welcome, {userProfile.name}!</p>
-          {/* Additional user details rendering */}
+          <p>Welcome, {userProfile?.name}!</p>
+          {/* Render additional user details */}
         </div>
       ) : (
         <div>No user profile found</div>

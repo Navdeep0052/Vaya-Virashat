@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Sidebar from './Sidebar';
 import ShortlistHotel from './ShortlistHotel'; // Import the ShortlistHotel component
+import ChatBox from './ChatBox'; // Import the ChatBox component
 import './HotelCards.css';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaComments } from 'react-icons/fa'; // Import chat icon
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
@@ -13,6 +14,8 @@ function HomePage() {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showEditDelete, setShowEditDelete] = useState(false); // Track if "All Hotels" is clicked
+  const [activeChat, setActiveChat] = useState(null); // State to manage active chat
+  const [chatOwnerId, setChatOwnerId] = useState(null); // State to store ownerId for chat
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,6 +73,16 @@ function HomePage() {
     }
   };
 
+  const handleChatClick = async (hotelId) => {
+    const hotel = hotels.find((hotel) => hotel._id === hotelId);
+    if (hotel) {
+      setChatOwnerId(hotel.ownerId);
+      setActiveChat(hotelId);
+    } else {
+      toast.error('Hotel not found');
+    }
+  };
+
   if (loading) {
     return (
       <div className="loading-spinner">
@@ -116,6 +129,13 @@ function HomePage() {
                         <strong>Address :</strong> {hotel.address}
                       </Card.Text>
                       <ShortlistHotel hotelId={hotel._id} /> {/* Add the ShortlistHotel component */}
+                      <Button
+                        variant="outline-primary"
+                        onClick={() => handleChatClick(hotel._id)}
+                        className="chat-button me-2"
+                      >
+                        <FaComments /> Chat
+                      </Button>
                       {showEditDelete && ( // Conditionally render edit and delete buttons
                         <>
                           <Button
@@ -130,7 +150,7 @@ function HomePage() {
                             onClick={() => handleDelete(hotel._id)}
                             className="delete-button"
                           >
-                            Delete
+                            <FaTrash /> Delete
                           </Button>
                         </>
                       )}
@@ -146,6 +166,7 @@ function HomePage() {
           </Row>
         </Col>
       </Row>
+      {activeChat && chatOwnerId && <ChatBox hotelId={activeChat} ownerId={chatOwnerId} onClose={() => setActiveChat(null)} />}
     </Container>
   );
 }

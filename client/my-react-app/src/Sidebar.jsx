@@ -24,6 +24,9 @@ function Sidebar({ onAllHotelsClick }) { // Accept the handler function as a pro
             <Link to="/hotel-list">Hotel List</Link>
           </li>
         )}
+        <li>
+          <Link to="/chats">Chats</Link> {/* New link for Chats */}
+        </li>
       </ul>
     </div>
   );

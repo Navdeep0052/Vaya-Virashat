@@ -17,31 +17,36 @@ import AdminDashboard from './AdminDashboard.jsx';
 import Profile from './profile.jsx';
 import './index.css';
 import './App.css'; 
+import Chats from './Chat'; // Import Chats component
+import { SocketProvider } from './SocketContext'; // Import SocketProvider
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Router>
-      <Header />
-      <main className="main-content">
-      <Profile apiurl={apiurl} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/owner-dashboard" element={<Dashboard />} />
-          <Route path="/executive-dashboard" element={<AdminDashboard />} /> {/* New Route for AdminDashboard */}
-          <Route path="/register-hotel" element={<RegisterHotel />} />
-          <Route path="/hotel-list" element={<HotelList />} />
-          <Route path="/edit-hotel/:hotelId" element={<RegisterHotel />} />
-          <Route path="/hotel-detail/:hotelId" element={<RegisterHotel />} />
-          <Route path="/HotelDetails/:hotelId" element={<HotelDetails />} />
-          <Route path="/hotels" element={<HomePage />} />
-          <Route path="/app" element={<App />} />
-        </Routes>
-      </main>
-      <Footer />
-    </Router>
+    <SocketProvider>
+      <Router>
+        <Header />
+        <main className="main-content">
+          <Profile apiurl={apiurl} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/owner-dashboard" element={<Dashboard />} />
+            <Route path="/executive-dashboard" element={<AdminDashboard />} /> {/* New Route for AdminDashboard */}
+            <Route path="/register-hotel" element={<RegisterHotel />} />
+            <Route path="/hotel-list" element={<HotelList />} />
+            <Route path="/edit-hotel/:hotelId" element={<RegisterHotel />} />
+            <Route path="/hotel-detail/:hotelId" element={<RegisterHotel />} />
+            <Route path="/HotelDetails/:hotelId" element={<HotelDetails />} />
+            <Route path="/hotels" element={<HomePage />} />
+            <Route path="/chats" element={<Chats />} /> {/* Pass socket instance to Chats component */}
+            <Route path="/app" element={<App />} />
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
+    </SocketProvider>
   </React.StrictMode>
 );
