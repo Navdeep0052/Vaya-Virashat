@@ -298,7 +298,7 @@ exports.nearbyplace = async (req, res) => {
     const locality = req.query.locality;
     const city = req.query.city;
     const state = req.query.state;
-    const apiKey = 'AIzaSyBJpvna9v4lSIA91Tglsqh8amfhqhlKDCk'; // Replace with your Google API Key
+    const apiKey = GOOGLE_MAPS_API_KEY 
 
     if (!locality || !city || !state) {
       return res.status(400).send({ status: 400, message: "locality, city, and state are required" });
