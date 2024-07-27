@@ -20,6 +20,7 @@ export const SocketProvider = ({ children }) => {
         query: {
           userId: authUser,
       },
+      transports: ['websocket'],
       });
 
       setSocket(newSocket);

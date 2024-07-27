@@ -7,7 +7,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dashboard from './Dashboard';
 import AdminDashboard from './AdminDashboard';
-import Login from './Login'; // Import Login component
+import Login from './Login'; 
+import { SocketProvider } from './SocketContext';
 
 function App() {
   const [role, setRole] = useState(localStorage.getItem('role') || '');
@@ -19,7 +20,7 @@ function App() {
   };
 
   return (
-    <>
+    <SocketProvider>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -40,7 +41,7 @@ function App() {
           <Route path="/login" element={<Login setRole={setRoleAndUpdateStorage} />} /> {/* Route for Login */}
         </Routes>
       </Router>
-    </>
+    </SocketProvider>
   );
 }
 
