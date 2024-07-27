@@ -7,6 +7,10 @@ import './Chat.css';
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
+// Import the audio file directly
+import sendTuneSrc from './sounds/mixkit-long-pop-2358.wav';
+import recieveTuneSrc from './sounds/mixkit-software-interface-start-2574.wav';
+
 function Chats() {
   const { socket } = useSocket();
   const [chats, setChats] = useState([]);
@@ -14,6 +18,8 @@ function Chats() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const loggedInUserId = localStorage.getItem('userId');
+  const sendTune = new Audio(sendTuneSrc); 
+  const recieveTune = new Audio(recieveTuneSrc); 
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -47,6 +53,7 @@ function Chats() {
     if (socket) {
       // Handle incoming messages
       socket.on('newMessage', (message) => {
+        recieveTune.play();
         setChats((prevChats) => prevChats.map((chat) => {
           if (chat.hotelId === message.hotelId) {
             return {
@@ -172,6 +179,7 @@ function Chats() {
       }
 
       setNewMessage('');
+      sendTune.play(); 
     } catch (error) {
       toast.error('An error occurred while sending the message. Please try again.');
     }
