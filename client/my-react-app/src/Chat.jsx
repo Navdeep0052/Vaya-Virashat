@@ -47,7 +47,6 @@ function Chats() {
     if (socket) {
       // Handle incoming messages
       socket.on('newMessage', (message) => {
-        console.log("Received message: ", message);
         setChats((prevChats) => prevChats.map((chat) => {
           if (chat.hotelId === message.hotelId) {
             return {
@@ -127,19 +126,39 @@ function Chats() {
         throw new Error('User ID not found');
       }
 
-      // Determine the senderId for the message from existing messages in the selected chat
-      let senderId = null;
+      // Determine the receiverId for the message from existing messages in the selected chat
+      let receiverId = null;
       if (selectedChat.messages.length > 0) {
-        // Find a senderId from existing messages that is not the current logged-in user
+        // Find a receiverId from existing messages that is not the current logged-in user
         const existingSender = selectedChat.messages.find(
-          (message) => message.senderId !== loggedInUserId
+          (message) => message.receiverId !== loggedInUserId
         );
-        senderId = existingSender ? existingSender.senderId : 'defaultSenderId'; // Use a default senderId if no valid senderId is found
+        receiverId = existingSender ? existingSender.receiverId : 'defaultreceiverId'; // Use a default receiverId if no valid receiverId is found
       } else {
-        senderId = 'defaultSenderId'; // Use a default senderId if no messages exist
+        receiverId = 'defaultreceiverId'; // Use a default receiverId if no messages exist
       }
-      const messageData = { senderId, message: newMessage, hotelId: selectedChat.hotelId };
-      const response = await fetch(`${apiurl}/sendMessage/${senderId}/${selectedChat.hotelId}`, {
+
+      const messageData = { senderId: loggedInUserId, receiverId, message: newMessage, hotelId: selectedChat.hotelId };
+
+      // Optimistically update the local chat state
+      setSelectedChat((prevChat) => ({
+        ...prevChat,
+        messages: [...prevChat.messages, messageData],
+      }));
+
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat.hotelId === selectedChat.hotelId
+            ? { ...chat, messages: [...chat.messages, messageData] }
+            : chat
+        )
+      );
+
+      // Emit message to the server
+      socket.emit('sendMessage', messageData);
+
+      // Send the message to the server
+      const response = await fetch(`${apiurl}/sendMessage/${receiverId}/${selectedChat.hotelId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -151,23 +170,6 @@ function Chats() {
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-
-      // Emit message to the server
-      socket.emit('sendMessage', messageData);
-
-      // Update local chat state
-      setChats((prevChats) =>
-        prevChats.map((chat) =>
-          chat.hotelId === selectedChat.hotelId
-            ? { ...chat, messages: [...chat.messages, messageData] }
-            : chat
-        )
-      );
-
-      setSelectedChat((prevChat) => ({
-        ...prevChat,
-        messages: [...prevChat.messages, messageData],
-      }));
 
       setNewMessage('');
     } catch (error) {
