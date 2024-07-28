@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { Button, Form, InputGroup, ListGroup, Spinner } from 'react-bootstrap';
 import { useSocket } from './SocketContext';
@@ -20,6 +20,7 @@ function Chats() {
   const loggedInUserId = localStorage.getItem('userId');
   const sendTune = new Audio(sendTuneSrc); 
   const recieveTune = new Audio(recieveTuneSrc); 
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -70,6 +71,7 @@ function Chats() {
             ...prevChat,
             messages: [...prevChat.messages, message],
           }));
+          scrollToBottom();
         }
       });
 
@@ -102,6 +104,7 @@ function Chats() {
             ...prevChat,
             messages: data.messages,
           }));
+          scrollToBottom();
         } catch (error) {
           toast.error('An error occurred while fetching messages. Please try again.');
         }
@@ -179,10 +182,15 @@ function Chats() {
       }
 
       setNewMessage('');
-      sendTune.play(); 
+      sendTune.play();
+      scrollToBottom();
     } catch (error) {
       toast.error('An error occurred while sending the message. Please try again.');
     }
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -219,6 +227,7 @@ function Chats() {
                     {message.message}
                   </div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
               <InputGroup className="mt-3">
                 <Form.Control
