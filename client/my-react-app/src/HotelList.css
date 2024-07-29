@@ -46,6 +46,8 @@
 .edit-button {
   padding: 0.5rem 1rem;
   margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .delete-button {
