@@ -136,24 +136,22 @@ function HomePage() {
                       >
                         <FaComments /> Chat
                       </Button>
-                      {showEditDelete && ( // Conditionally render edit and delete buttons
-                        <>
-                          <Button
-                            variant="outline-primary"
-                            onClick={() => handleEdit(hotel._id)}
-                            className="edit-button me-2"
-                          >
-                            <FaEdit /> Edit
-                          </Button>
-                          <Button
-                            variant="danger"
-                            onClick={() => handleDelete(hotel._id)}
-                            className="delete-button"
-                          >
-                            <FaTrash /> Delete
-                          </Button>
-                        </>
-                      )}
+                      <>
+                        <Button
+                          variant="outline-primary"
+                          onClick={() => handleEdit(hotel._id)}
+                          className="edit-button me-2"
+                        >
+                          <FaEdit /> Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => handleDelete(hotel._id)}
+                          className="delete-button"
+                        >
+                          <FaTrash /> Delete
+                        </Button>
+                      </>
                     </Card.Body>
                   </Card>
                 </Col>
