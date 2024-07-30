@@ -4,6 +4,7 @@ import { Button, Form, InputGroup, ListGroup, Spinner } from 'react-bootstrap';
 import { useSocket } from './SocketContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Chat.css';
+import VideoCallComponent from './VideoCallComponent'; // Import the VideoCallComponent
 
 const apiurl = import.meta.env.VITE_BASE_API_URL;
 
@@ -17,9 +18,12 @@ function Chats() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedChat, setSelectedChat] = useState(null);
   const [newMessage, setNewMessage] = useState('');
+  const [peerConnection, setPeerConnection] = useState(null); // Manage peer connection state
+  const [remoteStream, setRemoteStream] = useState(null); // Manage remote stream state
+  const [showVideoCall, setShowVideoCall] = useState(false); // Manage video call visibility
   const loggedInUserId = localStorage.getItem('userId');
-  const sendTune = new Audio(sendTuneSrc); 
-  const recieveTune = new Audio(recieveTuneSrc); 
+  const sendTune = new Audio(sendTuneSrc);
+  const recieveTune = new Audio(recieveTuneSrc);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -130,27 +134,23 @@ function Chats() {
     }
 
     try {
-      // Get the logged-in user ID from local storage
       const loggedInUserId = localStorage.getItem('userId');
       if (!loggedInUserId) {
         throw new Error('User ID not found');
       }
 
-      // Determine the receiverId for the message from existing messages in the selected chat
       let receiverId = null;
       if (selectedChat.messages.length > 0) {
-        // Find a receiverId from existing messages that is not the current logged-in user
         const existingSender = selectedChat.messages.find(
           (message) => message.receiverId !== loggedInUserId
         );
-        receiverId = existingSender ? existingSender.receiverId : 'defaultreceiverId'; // Use a default receiverId if no valid receiverId is found
+        receiverId = existingSender ? existingSender.receiverId : 'defaultreceiverId';
       } else {
-        receiverId = 'defaultreceiverId'; // Use a default receiverId if no messages exist
+        receiverId = 'defaultreceiverId';
       }
 
       const messageData = { senderId: loggedInUserId, receiverId, message: newMessage, hotelId: selectedChat.hotelId };
 
-      // Optimistically update the local chat state
       setSelectedChat((prevChat) => ({
         ...prevChat,
         messages: [...prevChat.messages, messageData],
@@ -164,10 +164,8 @@ function Chats() {
         )
       );
 
-      // Emit message to the server
       socket.emit('sendMessage', messageData);
 
-      // Send the message to the server
       const response = await fetch(`${apiurl}/sendMessage/${receiverId}/${selectedChat.hotelId}`, {
         method: 'POST',
         headers: {
@@ -193,6 +191,24 @@ function Chats() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleStartCall = () => {
+    const pc = new RTCPeerConnection();
+    setPeerConnection(pc);
+    setShowVideoCall(true);
+  };
+
+  const handleEndCall = () => {
+    if (peerConnection) {
+      peerConnection.close();
+      setPeerConnection(null);
+      setRemoteStream(null);
+    }
+    setShowVideoCall(false);
+
+    // Trigger a page refresh
+    window.location.reload();
+  };
+
   return (
     <div className="container">
       <h2>Chats</h2>
@@ -210,6 +226,11 @@ function Chats() {
                   active={selectedChat && selectedChat.hotelId === chat.hotelId}
                 >
                   {chat.hotelName}
+                  {selectedChat?.hotelId === chat.hotelId && (
+                    <span className="chat-count">
+                      {selectedChat.unreadCount > 0 && selectedChat.unreadCount}
+                    </span>
+                  )}
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -218,6 +239,17 @@ function Chats() {
         <div className="col-md-8">
           {selectedChat ? (
             <div className="chat-box">
+              <div className="chat-header">
+                <h5>{selectedChat.hotelName}</h5>
+                <button className="btn btn-outline-primary" onClick={handleStartCall}>
+                  📹 Start Call
+                </button>
+                {showVideoCall && (
+                  <button className="btn btn-outline-danger" onClick={handleEndCall}>
+                    ❌ End Call
+                  </button>
+                )}
+              </div>
               <div className="messages">
                 {selectedChat.messages.map((message, index) => (
                   <div
@@ -246,6 +278,13 @@ function Chats() {
           )}
         </div>
       </div>
+      {showVideoCall && (
+        <VideoCallComponent
+          peerConnection={peerConnection}
+          remoteStream={remoteStream}
+          endCall={handleEndCall}
+        />
+      )}
     </div>
   );
 }
