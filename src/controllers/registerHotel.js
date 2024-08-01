@@ -1,4 +1,5 @@
 const Hotel = require("../models/registerHotel");
+const { connectRedis } = require("../config/redis.config");
 const moment = require("moment");
 const axios = require("axios");
 const {
@@ -6,6 +7,12 @@ const {
   validateFound,
   validateId,
 } = require("../validators/commonValidations");
+
+let redisConnectionClient;
+
+(async()=>{
+  redisConnectionClient = await connectRedis()
+})()
 
 const AWS = require("aws-sdk");
 const { Console, count } = require("console");
@@ -156,18 +163,45 @@ exports.registerHotel = async (req, res) => {
 
 
 
+// exports.getRegisterHotel = async (req, res) => {
+//   try {
+//     const userId = req.user._id
+//     const page = parseInt(req.query.page);
+//     const limit = parseInt(req.query.limit);
+//     const hotel = await Hotel.find({ ownerId: userId }).skip((page - 1) * limit).limit(limit);
+//     return res.status(200).send({ hotel : hotel, message : "List Fetched Successfully"  });
+//   } catch (error) {
+//     console.log("error");
+//     return res.status(500).send({ error: "Something broke" });
+//   }
+// };
+
 exports.getRegisterHotel = async (req, res) => {
   try {
-    const userId = req.user._id
     const page = parseInt(req.query.page);
     const limit = parseInt(req.query.limit);
-    const hotel = await Hotel.find({ ownerId: userId }).skip((page - 1) * limit).limit(limit);
-    return res.status(200).send({ hotel : hotel, message : "List Fetched Successfully"  });
+    const allhotels = await redisConnectionClient.get("hotel");
+
+    if (allhotels) {
+      console.log("Data from redis");
+      return res.status(200).json({
+        hotel: JSON.parse(allhotels),
+        message: "List Fetched Successfully"
+      });
+    }
+
+    console.log("Data from mongoDB");
+    const hotel = await Hotel.find().skip((page - 1) * limit).limit(limit);
+    await redisConnectionClient.set("hotel", JSON.stringify(hotel));
+    console.log("Data stored in redis");
+
+    return res.status(200).send({ hotel, message: "List Fetched Successfully" });
   } catch (error) {
-    console.log("error");
+    console.log(error);
     return res.status(500).send({ error: "Something broke" });
   }
 };
+
 
 exports.getHotelDetails = async (req, res) => {
   try {
